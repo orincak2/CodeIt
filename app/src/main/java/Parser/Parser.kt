@@ -1,9 +1,11 @@
 package Parser
 
 
+import Turtle.Farba
 import Turtle.Fd
 import Turtle.Lt
 import Turtle.Rt
+import android.graphics.Color
 import android.view.View
 import android.widget.TextView
 import com.example.dp11.Playground
@@ -71,6 +73,8 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
         while(terminated != true){
             executeP()
         }
+        pg.cc = Color.GREEN
+        pg.cc = Color.CYAN
     }
     fun fromAnyToFloat(anyFloatValue: Any):Float{
         if(anyFloatValue is Float){
@@ -174,13 +178,21 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
             top = top + 1
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_LT.toFloat()){
             pc += 1
-            turtle.vlavo(fromAnyToFloat(mem[top]))
-            top += 1
+            var turtlee = mem[top + 1] as Turtle
+            turtlee.vlavo(fromAnyToFloat(mem[top]))
+            top += 2
         }
         else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_RT.toFloat()){
             pc += 1
-            turtle.vpravo(fromAnyToFloat(mem[top]))
-            top += 1
+            var turtlee = mem[top + 1] as Turtle
+            turtlee.vpravo(fromAnyToFloat(mem[top]))
+            top += 2
+        }
+        else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_SET_COLOR.toFloat()){
+            pc += 1
+            var turtlee = mem[top + 1] as Turtle
+            turtlee.farba(fromAnyTo(mem[top]).toString())
+            top += 2
         }
         else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_SET.toFloat()){
             pc += 1
@@ -405,10 +417,10 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                 //result.add(Fd(addsub()))
             }else if(token == "vlavo"){
                 scan()
-                result.add(Lt(addsub()))
+               // result.add(Lt(addsub()))
             }else if(token == "vpravo"){
                 scan()
-                result.add(Rt(addsub()))
+                //result.add(Rt(addsub()))
             }else if(token == "vypis"){
                 scan()
                 result.add(Print(addsub()))
@@ -430,39 +442,122 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                     scan()
                 }
                 if(token != "="){
-                    if(!(name in globals)){
-                        throw Exception("Neznámy príkaz" + name)
-                    }
-                   /* if(!(globals[name] is Subroutine) && !(globals[name] is Trutl) ){
+                    if((name in globals)) {
+                        //throw Exception("Neznámy príkaz" + name)
+
+                        /* if(!(globals[name] is Subroutine) && !(globals[name] is Trutl) ){
                         throw Exception(name + " nie je podprogram")
                     }*/
-                    if(token == "."){
-                        var nieco = globals[name]
-                        scan()
-                        if(token == "dopredu"){
+                        if (token == ".") {
+                            var nieco = globals[name]
                             scan()
-
-                            result.add(Fd(nieco as Variable,addsub()))
-                        }
-                    }else {
-                        var subr = globals[name] as Subroutine
-                        var agrs = Block()
-                        if (token == "(") {
-                            scan()
-                            if (token != ")") {
-                                agrs.add(expr())
-                                while (token == ",") {
+                            if (token == "dopredu") {
+                                scan()
+                                if(token == "(") {
                                     scan()
-                                    agrs.add(expr())
+                                    result.add(Fd(nieco as Variable, addsub()))
+                                    scan()
+                                }else{
+                                    result.add(Fd(nieco as Variable, addsub()))
                                 }
                             }
-                            check(SYMBOL, ")")
+                            if (token == "vpravo") {
+                                scan()
+                                if(token == "(") {
+                                    scan()
+                                    result.add(Rt(nieco as Variable, addsub()))
+                                    scan()
+                                }else{
+                                    result.add(Rt(nieco as Variable, addsub()))
+                                }
+
+                            }
+                            if (token == "vlavo") {
+                                scan()
+                                if(token == "(") {
+                                    scan()
+                                    result.add(Lt(nieco as Variable, addsub()))
+                                    scan()
+                                }else{
+                                    result.add(Lt(nieco as Variable, addsub()))
+                                }
+                            }
+                            if (token == "farba") {
+                                scan()
+                                if(token == "(") {
+                                    scan()
+                                    result.add(Farba(nieco as Variable, addsub()))
+                                    scan()
+                                }else{
+                                    result.add(Farba(nieco as Variable, addsub()))
+                                }
+                            }
+                        } else {
+                            var subr = globals[name] as Subroutine
+                            var agrs = Block()
+                            if (token == "(") {
+                                scan()
+                                if (token != ")") {
+                                    agrs.add(expr())
+                                    while (token == ",") {
+                                        scan()
+                                        agrs.add(expr())
+                                    }
+                                }
+                                check(SYMBOL, ")")
+                                scan()
+                            }
+                            if (agrs.items.count() != subr.paramcount) {
+                                throw Exception("Nesprávny počet parametrov")
+                            }
+                            result.add(Call(subr, agrs))
+                        }
+                    }else{
+                        if (token == ".") {
+                            var nieco = locals[name]
                             scan()
+                            if (token == "dopredu") {
+                                scan()
+                                if(token == "(") {
+                                    scan()
+                                    result.add(Fd(nieco as Variable, addsub()))
+                                    scan()
+                                }else{
+                                    result.add(Fd(nieco as Variable, addsub()))
+                                }
+                            }
+                            if (token == "vpravo") {
+                                scan()
+                                if(token == "(") {
+                                    scan()
+                                    result.add(Rt(nieco as Variable, addsub()))
+                                    scan()
+                                }else{
+                                    result.add(Rt(nieco as Variable, addsub()))
+                                }
+
+                            }
+                            if (token == "vlavo") {
+                                scan()
+                                if(token == "(") {
+                                    scan()
+                                    result.add(Lt(nieco as Variable, addsub()))
+                                    scan()
+                                }else{
+                                    result.add(Lt(nieco as Variable, addsub()))
+                                }
+                            }
+                            if (token == "farba") {
+                                scan()
+                                if(token == "(") {
+                                    scan()
+                                    result.add(Farba(nieco as Variable, addsub()))
+                                    scan()
+                                }else{
+                                    result.add(Farba(nieco as Variable, addsub()))
+                                }
+                            }
                         }
-                        if (agrs.items.count() != subr.paramcount) {
-                            throw Exception("Nesprávny počet parametrov")
-                        }
-                        result.add(Call(subr, agrs))
                     }
                 }else{
                     scan()

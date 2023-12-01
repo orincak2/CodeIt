@@ -88,9 +88,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         but1!!.setOnClickListener {
-           txt!!.setText("d = 1\n" +
-                    "definuj krok() [dopredu d]\n" +
-                    "definuj toc() [vpravo 70]\n" +
+           txt!!.setText("d = 1 a = turtle b = turtle\n" +
+                    "definuj krok() [a.dopredu d b.dopredu d]\n" +
+                    "definuj toc() [a.vpravo 70 b.vpravo 70]\n" +
                    "definuj zvec(h) [vrat d + h]\n" +
                     "kym d < 150 [krok() toc() d = zvec(7)]")
             //wordHelpButttonClicked(but1)
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             //wordHelpButttonClicked(but2)
         }
         but3!!.setOnClickListener {
-            txt!!.setText("a = turtle b = turtle a.dopredu 300 b.dopredu 100")
+            txt!!.setText("d = 70 a = turtle b = turtle definuj krok(k,l) [k.dopredu l] a.dopredu(70) krok(b,35) b.farba \"modra\" krok(b,36)")
             //wordHelpButttonClicked(but3)
         }
         but4!!.setOnClickListener {

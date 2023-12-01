@@ -15,9 +15,14 @@ class Playground(internal var context: Context, attrs: AttributeSet)
     var pwidth = 0
     var pheight = 0
     var ciara = emptyList<Float>().toMutableList()
+    var ciary = emptyList<Ciara>().toMutableList()
     var cc = Color.RED
     init { // inicializacia
         setBackgroundColor(Color.GRAY)
+    }
+
+    fun addCiara(pole:MutableList<Float>, color: Int){
+        ciary.add(Ciara(context,pole,color))
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -32,21 +37,15 @@ class Playground(internal var context: Context, attrs: AttributeSet)
     }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        if(ciara.size > 2) {
-            val mP = Paint()
-            mP.color = cc
-            mP.strokeWidth = 5.0F
-
-            val l = emptyArray<Float>().toMutableList()
-            for (i in ciara){
-                l.add(i)
-            }
-            canvas.drawLines(l.toFloatArray(),mP)
-
+        for (b in ciary) {
+            b.draw(canvas)
         }
 
+
     }
-    override fun onTouchEvent(event: MotionEvent): Boolean {
+
+
+   override fun onTouchEvent(event: MotionEvent): Boolean {
         return super.onTouchEvent(event)
 
     }
