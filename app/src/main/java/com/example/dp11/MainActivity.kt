@@ -89,23 +89,24 @@ class MainActivity : AppCompatActivity() {
 
         but1!!.setOnClickListener {
            txt!!.setText("d = 1 a = turtle b = turtle\n" +
-                    "definuj krok() [a.dopredu d b.dopredu d]\n" +
-                    "definuj toc() [a.vpravo 70 b.vpravo 70]\n" +
-                   "definuj zvec(h) [vrat d + h]\n" +
-                    "kym d < 150 [krok() toc() d = zvec(7)]")
+                    "definuj krok(){a.dopredu d b.dopredu d}\n" +
+                    "definuj toc(){a.vpravo 70 b.vpravo 70}\n" +
+                   "definuj zvec(h) {vrat d + h}\n" +
+                    "kym d < 150 {krok() toc() d = zvec(7)}")
             //wordHelpButttonClicked(but1)
         }
         but2!!.setOnClickListener {
             txt!!.setText("d = true\n" +
-                    "opakuj 2 [ak d [vypis 100][vypis 200] d = not d")
+                    "opakuj 2 \n{\n\tak d: \n\t\tvypis 100" +
+                    "\n\tinak:\n\t\tvypis 200 \nd = not d}")
             //wordHelpButttonClicked(but2)
         }
         but3!!.setOnClickListener {
-            txt!!.setText("d = 70 a = turtle b = turtle definuj krok(k,l) [k.dopredu l] a.dopredu(70) krok(b,35) b.farba \"modra\" krok(b,36)")
+            txt!!.setText("d = 70 a = turtle b = turtle definuj krok(k,l):k.dopredu l\t a.dopredu(70) krok(b,35) b.farba \"modra\" krok(b,36)")
             //wordHelpButttonClicked(but3)
         }
         but4!!.setOnClickListener {
-            txt!!.setText("c = 4 b = [7,2,1,\"nieco\"] a = 1 for x in 0..c [a = a+ b[x]] vypis a")
+                txt!!.setText("c = 4 b = [7,2,1,\"nieco\"] a = 1 for x in 0..c{a = a+ b[x]}vypis a")
             //wordHelpButttonClicked(but4)
         }
         but5!!.setOnClickListener {

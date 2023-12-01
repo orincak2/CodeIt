@@ -23,6 +23,8 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
     var pg = npg
     var print = nprint
     var turtle = Turtle(pg!!)
+    var tabindex = 0
+    var tabcount = 0
     class MojaTrieda(val hodnota: Any) {
         operator fun plus(inyObjekt: MojaTrieda): Any {
             if(this.hodnota is Float){
@@ -298,26 +300,57 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
 
     fun parse(): Block {
         var result = Block()
-        while (kind == WORD){
+
+        while (kind == WORD && tabindex <= tabcount ){
             if(token == "ak" || token == "if"){
+                var navysetab = tabcount
                 scan()
-                var test = expr()
-                check(SYMBOL, "[")
+                var test = Syntax()
+                if(token == "("){
+                    scan()
+                    test = expr()
+                    scan()
+                }else{
+                    test = expr()
+                }
+                var boltab = false
+                if(token == ":"){
+                    tabindex += 1 + navysetab
+                    boltab = true
+                }
+                //check(SYMBOL, "{")
                 scan()
                 var ifelse = IfElse(test, parse(), null)
-                check(SYMBOL, "]")
-                scan()
-                if(token == "tak" || token == "else"){
+                //check(SYMBOL, "}")
+                if(token == "}"){
                     scan()
                 }
-                if(token == "["){
+
+                if(token == "inak" || token == "else"){
+                    if(boltab){
+                        if(tabindex-1 != tabcount){
+                            throw Exception()
+                        }
+                    }
+                    scan()
+                }
+                if(token == "{" || token == ":"){
+                    if(token == ":" && !boltab){
+                        navysetab = tabcount
+                        tabindex += 1 + navysetab
+                        boltab = true
+                    }
                     scan()
                     ifelse.bodyfalse = parse()
-                    check(SYMBOL, "]")
-                    scan()
+                    if(token == "}"){
+                        scan()
+                    }
+                }
+                if(boltab){
+                    tabindex -= (1 + navysetab)
                 }
                 result.add(ifelse)
-            }else if(token == "definuj" || token == "def"){
+            }else if(token == "definuj" || token == "def" || token == "fun" || token == "metoda"|| token == "funkcia"){
                 scan()
                 check(WORD)
                 var name = token
@@ -327,14 +360,14 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                 scan()
                 var pom = Subroutine(name, params(), null)
                 globals[name] = pom
-                check(SYMBOL, "[")
+                //check(SYMBOL, "{")
                 scan()
                 locals = pom.vars
                 localvardelta = -1
                 pom.body = parse()
                 //pom.vars = locals
                 locals = mutableMapOf<String, Variable>()
-                check(SYMBOL, "]")
+                //check(SYMBOL, "}")
                 scan()
                 result.add(pom)
             }else if (token == "for") {
@@ -427,10 +460,10 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
             }else if(token == "kym"){
                 scan()
                 var test = expr()
-                check(SYMBOL, "[")
+                check(SYMBOL, "{")
                 scan()
                 result.add(While(test, parse()))
-                check(SYMBOL, "]")
+                check(SYMBOL, "}")
                 scan()
             }else{
                 var name = token
@@ -627,6 +660,7 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                 }
             }
         }
+        //tabindex = 0
         return result
     }
 
@@ -739,16 +773,15 @@ fun elementsO():MyList{
             check(NUMBER)
             result = Const(token.toFloat())
         }
-        //scan()
-        if(input[index-1] == '[' && result is Variable){
-            scan()
+        scan()
+        if(token == "[" && result is Variable){
             scan()
             var indexx = addsub()
             var variab = result
             result = ListElement(variab,indexx)
-            //scan()
+            scan()
         }
-        scan()
+       // scan()
         return result
     }
 
@@ -877,8 +910,20 @@ fun elementsO():MyList{
     }
 
     fun scan(){
-        while(look == ' ' || look == '\n'){
+        while(look == ' ' || look == '\n' || look == '\t'){
+            if(look == '\n'){
+                tabcount= 0
+            }
             next()
+            while(look == ' ' || look == '\n'){
+                if(look == '\n'){
+                    tabcount= 0
+                }
+                next()
+            }
+            if(look == '\t'){
+                tabcount += 1
+            }
         }
         token = ""
         position = index - 1
