@@ -1,6 +1,6 @@
 package com.example.dp11
 
-class WordHelper(val sText: String, val iMainPrio: Int, val iSecPrio: Int) : Comparable<WordHelper> {
+class WordHelper(val sText: String, val iMainPrio: Int, val iSecPrio: Int, val isSUb :Boolean = false) : Comparable<WordHelper> {
 
     override fun compareTo(other: WordHelper): Int {
         if(iMainPrio < other.iMainPrio) return -1
@@ -12,7 +12,8 @@ class WordHelper(val sText: String, val iMainPrio: Int, val iSecPrio: Int) : Com
     }
 
     override fun equals(other: Any?): Boolean {
-        return (other is WordHelper) && sText == other.sText
+        if(other is WordHelper) {return  sText == other.sText}
+        return other.toString() == sText
     }
 
     fun myEqual(sWord : String): Boolean{

@@ -102,15 +102,39 @@ class MainActivity : AppCompatActivity() {
             //wordHelpButttonClicked(but2)
         }
         but3!!.setOnClickListener {
-            txt!!.setText("d = 70 a = turtle b = turtle definuj krok(k,l):k.dopredu l\t a.dopredu(70) krok(b,35) b.farba \"modra\" krok(b,36)")
+            txt!!.setText("d = \"aaa\" " +
+                    "\nak d:" +
+                    "\n\ta=1" +
+                    "\n\tkym a<3:" +
+                    "\n\t\tvypis 100" +
+                    "\n\t\ta = a+1"+
+                    "\nelse:" +
+                    "\n\tvypis 200" +
+                    "\nvypis 300")
             //wordHelpButttonClicked(but3)
         }
         but4!!.setOnClickListener {
-                txt!!.setText("c = 4 b = [7,2,1,\"nieco\"] a = 1 for x in 0..c{a = a+ b[x]}vypis a")
+                txt!!.setText("c = 4 b = [7,2,1,\"nieco\"] a = 1 " +
+                        "\nfor x = 0 x < c:" +
+                        "\n\ta = a+ b[x]" +
+                        "\n\tvypis a")
             //wordHelpButttonClicked(but4)
         }
         but5!!.setOnClickListener {
-            wordHelpButttonClicked(but5)
+            txt!!.setText("a = true" +
+                    "\n definuj krok(b)" +
+                    "\n{" +
+                    "\n\tak (a)" +
+                    "\n\t{" +
+                    "\n\t\tvypis 100" +
+                    "\n\t}" +
+                    "\n\tinak" +
+                    "\n\t{" +
+                    "\n\t\tvypis 200" +
+                    "\n\t}" +
+                    "\n}" +
+                    "\n krok(4)")
+            //wordHelpButttonClicked(but5)
         }
 
         runButton!!.setOnClickListener {

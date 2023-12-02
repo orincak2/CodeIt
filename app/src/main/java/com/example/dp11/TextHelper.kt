@@ -81,12 +81,25 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
         next()
         pom = scan(pom)
         while (kind != NOTHING){
-            if(token == "definuj" || token == "def"){
+            if(token == "definuj" || token == "def" || token == "fun" || token == "metoda"|| token == "funkcia"){
                 pom += getColoredText(token, Color.rgb(255, 165, 0).toString())
-                pom = scan(pom)
+                pom = scan(pom,true)
                 pom += getColoredText(token, Color.BLUE.toString())
-            }else if(token == "opakuj" || token == "kym" || token == "ak"){
+            }else if(token == "for" || token == "cyklus" || token == "foreach" || token == "opakuj" || token == "repeat" || token == "kym" || token == "while" || token == "ak" || token == "if" || token == "inak" || token == "else"){
                 pom += getColoredText(token, Color.rgb(255,105,180).toString())
+            }else if(token == "vrat" || token == "return"){
+                pom += getColoredText(token, Color.rgb(255, 165, 0).toString())
+            }else if(token == "true" || token == "false"){
+                pom += getColoredText(token, Color.rgb(255, 165, 0).toString())
+            }else if(token[0] == '\"'){
+                pom += getColoredText(token, Color.GREEN.toString())
+            }else if((wordHelper.any { it.myEqual(token) })){
+                val index = wordHelper.indexOfFirst { it.myEqual(token) }
+                if(wordHelper[index].isSUb) {
+                    pom += getColoredText(token, Color.BLUE.toString())
+                }else{
+                    pom += getColoredText(token, Color.BLACK.toString())
+                }
             }else
             {
                 pom += getColoredText(token, Color.BLACK.toString())
@@ -99,13 +112,17 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
     }
 
 
-    fun scan(nResult: String): String{
+    fun scan(nResult: String, sub:Boolean = false): String{
         var result = nResult
-        while(look == ' ' || look == '\n'){
+        while(look == ' ' || look == '\n' || look == '\t' || look == ';'){
             if(look == ' ' ){
                 result += look
-            }else{
+            }else if (look == '\n' ){
                 result += "<br>"
+            }else if (look == '\t' ){
+                result += '\t'
+            }else{
+                result += look
             }
 
             next()
@@ -129,15 +146,28 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
                         return result
                     }
                 }
-                wordHelper.add(WordHelper(token, 200, 0))
+                if(sub){
+                    wordHelper.add(WordHelper(token, 200, 0, true))
+                }else {
+                    wordHelper.add(WordHelper(token, 200, 0))
+                }
             }
+        }else if(look == '\"'){
+            token += look
+            next()
+            while(look != '\"'){
+                token += look
+                next()
+            }
+            token += look
+            next()
+            kind = WORD
         }else if(look == '<' || look == '>'){
             if(look == '<'){
                 token += "&lt"
             }else{
                 token += "&gt"
             }
-            token += look
             next()
             if(look == '='){
                 token += look
