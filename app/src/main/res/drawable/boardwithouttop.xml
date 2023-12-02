@@ -1,0 +1,16 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+<!-- Border -->
+<item>
+    <shape>
+        <solid android:color="#4fa5d5"></solid>
+    </shape>
+</item>
+<!-- Body -->
+<item android:left="2dip"
+    android:bottom="2dp"
+    android:right="2dp">
+    <shape>
+        <solid android:color="#FF3F3E3E"></solid>
+    </shape>
+</item>
+</layer-list>

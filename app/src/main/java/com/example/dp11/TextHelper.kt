@@ -39,27 +39,27 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
         for (sWord in wordHelper){
             if(sWord.iMainPrio > 100 && sWord.myEqual(sLastWord)){
                 var iIndex = wordHelper.indexOf(sWord)
-                wordHelper[iIndex] = WordHelper(sWord.sText, 0, 100)
+                wordHelper[iIndex] = WordHelper(sWord.sText, 0, 100, sWord.isSUb)
             }
             else if(sWord.iMainPrio > 100 && sWord.sText.contains(sLastWord)){
                 var iIndex = wordHelper.indexOf(sWord)
-                wordHelper[iIndex] = WordHelper(sWord.sText, 1, 101)
+                wordHelper[iIndex] = WordHelper(sWord.sText, 1, 101, sWord.isSUb)
             }
             else if(sWord.iMainPrio < 100 && sWord.myEqual(sLastWord)){
                 var iIndex = wordHelper.indexOf(sWord)
-                wordHelper[iIndex] = WordHelper(sWord.sText, 0, sWord.iMainPrio)
+                wordHelper[iIndex] = WordHelper(sWord.sText, 0, sWord.iMainPrio, sWord.isSUb)
             }
             else if(sWord.iMainPrio < 100 && sWord.sText.contains(sLastWord)){
                 var iIndex = wordHelper.indexOf(sWord)
-                wordHelper[iIndex] = WordHelper(sWord.sText, 1, sWord.iMainPrio)
+                wordHelper[iIndex] = WordHelper(sWord.sText, 1, sWord.iMainPrio, sWord.isSUb)
             }
             else if((sWord.iMainPrio == 0 || sWord.iMainPrio == 1) && !sWord.sText.contains(sLastWord) && sWord.iSecPrio > 50){
                 var iIndex = wordHelper.indexOf(sWord)
-                wordHelper[iIndex] = WordHelper(sWord.sText, 200, 0)
+                wordHelper[iIndex] = WordHelper(sWord.sText, 200, 0, sWord.isSUb)
             }
             else if((sWord.iMainPrio == 0 || sWord.iMainPrio == 1) && !sWord.sText.contains(sLastWord) && sWord.iSecPrio < 50){
                 var iIndex = wordHelper.indexOf(sWord)
-                wordHelper[iIndex] = WordHelper(sWord.sText, sWord.iSecPrio, 1)
+                wordHelper[iIndex] = WordHelper(sWord.sText, sWord.iSecPrio, 1, sWord.isSUb)
             }
         }
         wordHelper.sort()
@@ -140,7 +140,7 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
                 next()
             }
             kind = WORD
-            if(token != "definuj" && token != "def" && token != "opakuj" && token != "kym" && token != "ak"){
+            if(token != "definuj" && token != "def" && token != "fun" && token != "metoda"&& token != "funkcia" && token != "for" && token != "cyklus" && token != "foreach" && token != "opakuj" && token != "repeat" && token != "kym" && token != "while" && token != "ak" && token != "if" && token != "inak" && token != "else" && token != "vrat" && token != "return" && token != "true" && token != "false"){
                 for(x in wordHelper){
                     if(x.sText == token){
                         return result

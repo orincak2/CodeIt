@@ -2,14 +2,11 @@ package com.example.dp11
 
 
 import Parser.Parser
-import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.text.Html
 import android.text.InputType
-import android.text.Layout
+import android.text.method.ScrollingMovementMethod
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -18,18 +15,18 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.textview.MaterialTextView
-import java.io.IOException
 import java.util.Timer
 import kotlin.concurrent.schedule
+
 
 class MainActivity : AppCompatActivity() {
 
     var txt: EditText?= null
     var txt2: EditText?= null
+    var txt4: EditText?= null
     var but1: Button? = null
     var but2: Button? = null
     var but3: Button? = null
@@ -122,21 +119,34 @@ class MainActivity : AppCompatActivity() {
         }
         but5!!.setOnClickListener {
             txt!!.setText("a = true" +
-                    "\n definuj krok(b)" +
-                    "\n{" +
-                    "\n\tak (a)" +
-                    "\n\t{" +
+                    "\n definuj krok(b):" +
+                    "" +
+                    "\n\tak (a):" +
+                    "" +
                     "\n\t\tvypis 100" +
-                    "\n\t}" +
-                    "\n\tinak" +
-                    "\n\t{" +
+                    "" +
+                    "\n\tinak:" +
+                    "" +
                     "\n\t\tvypis 200" +
-                    "\n\t}" +
-                    "\n}" +
+                    "\n\treturn b" +
+                    "" +
+                    "\n krok(4)")
+            txt4!!.setText("a = true" +
+                    "\n definuj krok(b):" +
+                    "" +
+                    "\n\tak (a):" +
+                    "" +
+                    "\n\t\tvypis 100" +
+                    "" +
+                    "\n\tinak:" +
+                    "" +
+                    "\n\t\tvypis 200" +
+                    "\n\treturn b" +
+                    "" +
                     "\n krok(4)")
             //wordHelpButttonClicked(but5)
         }
-
+        print!!.setMovementMethod(ScrollingMovementMethod())
         runButton!!.setOnClickListener {
            parser!!.run(txt!!)
         }
@@ -155,18 +165,23 @@ class MainActivity : AppCompatActivity() {
         //turtle = Turtle(pg!!)
         txt2 = findViewById(R.id.editTextText3)
         txt = findViewById(R.id.editTextText)
+        txt4 = findViewById(R.id.editTextText4)
         but1 = findViewById(R.id.button3)
         but2 = findViewById(R.id.button4)
         but3 = findViewById(R.id.button5)
         but4 = findViewById(R.id.button)
         but5 = findViewById(R.id.button2)
 
-        wordsHelper.add(WordHelper("definuj", 4, 1))
-        wordsHelper.add(WordHelper("opakuj", 5,1))
-        wordsHelper.add(WordHelper("vypis", 6,1))
-        wordsHelper.add(WordHelper("dopredu", 7,1))
-        wordsHelper.add(WordHelper("vpravo", 8,1))
-        wordsHelper.add(WordHelper("vlavo", 9,1))
+        wordsHelper.add(WordHelper("def", 4, 1))
+        wordsHelper.add(WordHelper("for", 5,1))
+        wordsHelper.add(WordHelper("print", 6,1))
+        wordsHelper.add(WordHelper("inak", 7,1))
+        wordsHelper.add(WordHelper("turtle", 8,1))
+        wordsHelper.add(WordHelper("while", 9,1))
+        wordsHelper.add(WordHelper("return", 10,1))
+        wordsHelper.add(WordHelper("dopredu", 13,1))
+        wordsHelper.add(WordHelper("vpravo", 14,1))
+        wordsHelper.add(WordHelper("vlavo", 15,1))
         th = TextHelper(txt, but1, but2, but3, but4, but5, wordsHelper)
 
         if (Build.VERSION.SDK_INT >= 21) {
