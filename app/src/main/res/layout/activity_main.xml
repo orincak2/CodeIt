@@ -16,42 +16,75 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/editTextText3"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:autoText="false"
-            android:ems="10"
-            android:gravity="start|top"
-            android:hint="Your code"
-            android:inputType="textMultiLine|textNoSuggestions"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="vertical">
+
+            <ScrollView
+                android:id="@+id/scrol2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="50">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <EditText
+                        android:id="@+id/textView5"
+                        android:layout_width="0dp"
+                        android:layout_height="6000dp"
+                        android:layout_weight="3"
+                        android:background="@drawable/boardwithouttop"
+                        android:gravity="top|center"
+                        android:paddingTop="10dp"
+                        android:text="1"
+                        android:textColor="#50FFFFFF"
+                        android:visibility="visible" />
+
+                    <EditText
+                        android:id="@+id/editTextText5"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="96"
+                        android:gravity="top"
+                        android:hint="Your code"
+                        android:inputType="textMultiLine|textNoSuggestions" />
+                </LinearLayout>
+            </ScrollView>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layFullKey"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="40">
+
+                <com.example.dp11.MyKeyboard
+                    android:id="@+id/keyboard2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:layout_constrainedHeight="true">
+
+                </com.example.dp11.MyKeyboard>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/imageView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/editTextText3"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
-        <com.example.dp11.MyKeyboard
-            android:id="@+id/keyboard2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-            android:orientation="vertical"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/editTextText3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editTextText3"
-            app:layout_constraintVertical_bias="1.0"
-            tools:layout_constrainedHeight="true">
-
-        </com.example.dp11.MyKeyboard>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
@@ -155,7 +188,8 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
                     android:layout_weight="2"
-                    android:src="@drawable/d" />
+                    android:src="@drawable/d"
+                    android:visibility="invisible" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -228,21 +262,10 @@
                         android:textAllCaps="false" />
                 </LinearLayout>
 
-                <EditText
-                    android:id="@+id/textView3"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:paddingTop="10dp"
-                    android:background="@drawable/boardwithouttop"
-                    android:gravity="top|center"
-                    android:text="1\n2\n3\n4\n5"
-                    android:textColor="#FFFFFF" />
-
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="89">
+                    android:layout_weight="92">
 
                     <LinearLayout
                         android:id="@+id/linearLayout3"
@@ -264,11 +287,152 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:orientation="horizontal"
+                                android:orientation="vertical"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent">
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="50">
+
+                                    <ScrollView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="50">
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                            <EditText
+                                                android:id="@+id/textView3"
+                                                android:layout_width="0dp"
+                                                android:layout_height="6000dp"
+                                                android:layout_weight="3"
+                                                android:background="@drawable/boardwithouttop"
+                                                android:gravity="top|center"
+                                                android:paddingTop="10dp"
+                                                android:text="1"
+                                                android:textColor="#50FFFFFF"
+                                                android:visibility="visible" />
+
+                                            <EditText
+                                                android:id="@+id/editTextText"
+                                                android:layout_width="0dp"
+                                                android:layout_height="match_parent"
+                                                android:layout_weight="96"
+                                                android:gravity="top"
+                                                android:hint="Your code"
+                                                android:inputType="textMultiLine|textNoSuggestions" />
+                                        </LinearLayout>
+                                    </ScrollView>
+
+                                    <com.example.dp11.Playground
+                                        android:id="@+id/playground"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="0dp"
+                                        android:layout_weight="1"
+                                        android:contentDescription="@string/playground"
+                                        android:visibility="invisible"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:id="@+id/spodok"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="4">
+
+                                    <LinearLayout
+                                        android:id="@+id/linearLayout2"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:visibility="visible"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent">
+
+                                        <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:id="@+id/TerminalLayout"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="3">
+
+                                            <TextView
+                                                android:id="@+id/textView2"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:background="@drawable/board"
+                                                android:fontFamily="sans-serif-medium"
+                                                android:gravity="center|left"
+                                                android:text="  Terminal"
+                                                android:textColor="#FFFFFF"
+                                                android:textSize="18sp"
+                                                app:autoSizeTextType="uniform"
+                                                tools:layout_editor_absoluteY="28dp" />
+
+                                            <ImageView
+                                                android:id="@+id/imageView6"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="match_parent"
+                                                android:layout_marginRight="100dp"
+                                                app:layout_constraintEnd_toEndOf="parent"
+                                                app:layout_constraintTop_toTopOf="parent"
+                                                app:srcCompat="@android:drawable/arrow_up_float" />
+                                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                        <LinearLayout
+                                            android:id="@+id/vypisl"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="0"
+                                            android:orientation="horizontal"
+                                            android:visibility="invisible">
+
+                                            <ImageView
+                                                android:id="@+id/imageView8"
+                                                android:layout_width="0dp"
+                                                android:layout_height="match_parent"
+                                                android:layout_weight="3"
+                                                app:srcCompat="@drawable/boardwithouttop" />
+
+                                            <TextView
+                                                android:id="@+id/Vypis"
+                                                android:layout_width="0dp"
+                                                android:layout_height="match_parent"
+                                                android:layout_weight="96"
+                                                android:scrollbars="horizontal|vertical"
+                                                android:text="..."
+                                                android:visibility="visible" />
+                                        </LinearLayout>
+
+
+                                    </LinearLayout>
+
+                                    <com.example.dp11.MyKeyboard
+                                        android:id="@+id/keyboard"
+                                        android:layout_width="0dp"
+                                        android:layout_height="0dp"
+                                        android:orientation="vertical"
+                                        android:visibility="invisible"
+                                        app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
+                                        app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
+                                        app:layout_constraintStart_toStartOf="@+id/linearLayout2"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        tools:layout_constrainedHeight="true">
+
+                                    </com.example.dp11.MyKeyboard>
+
+                                </androidx.constraintlayout.widget.ConstraintLayout>
 
                             </LinearLayout>
                             <!--  <ScrollView
@@ -301,123 +465,25 @@
                                   android:inputType="textMultiLine|textNoSuggestions"
                                   app:layout_constraintEnd_toEndOf="parent" />
 -->
-                            <ScrollView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintTop_toTopOf="parent">
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent">
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                    <EditText
-                                        android:id="@+id/editTextText4"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_weight="1"
-                                        android:gravity="top"
-                                        android:hint="EditText 1"
-                                        android:inputType="textMultiLine" />
+                    </LinearLayout>
 
-                                    <EditText
-                                        android:id="@+id/editTextText"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_weight="1"
-                                        android:gravity="top"
-                                        android:hint="EditText 2"
-                                        android:inputType="textMultiLine" />
-                                </LinearLayout>
-                            </ScrollView>
-                              <com.example.dp11.Playground
-                                  android:id="@+id/playground"
-                                  android:layout_width="match_parent"
-                                  android:layout_height="match_parent"
-                                  android:layout_weight="1"
-                                  android:contentDescription="@string/playground"
-                                  android:visibility="invisible"
-                                   />
+                    <ImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@android:drawable/ic_menu_crop" />
 
-                          </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                          <TextView
-                              android:id="@+id/textView2"
-                              android:layout_width="match_parent"
-                              android:layout_height="match_parent"
-                              android:layout_weight="9"
-                              android:background="@drawable/board"
-                              android:fontFamily="sans-serif-medium"
-                              android:gravity="center|left"
-                              android:text="  Terminal"
-                              android:textColor="#FFFFFF"
-                              android:textSize="18sp"
-                              app:autoSizeTextType="uniform" />
+            </LinearLayout>
 
-                          <androidx.constraintlayout.widget.ConstraintLayout
-                              android:layout_width="match_parent"
-                              android:layout_height="match_parent"
-                              android:layout_weight="6">
+        </LinearLayout>
 
-                              <LinearLayout
-                                  android:id="@+id/linearLayout2"
-                                  android:layout_width="match_parent"
-                                  android:layout_height="match_parent"
-                                  android:orientation="horizontal"
-                                  android:visibility="visible"
-                                  app:layout_constraintBottom_toBottomOf="parent"
-                                  app:layout_constraintEnd_toEndOf="parent"
-                                  app:layout_constraintStart_toStartOf="parent"
-                                  app:layout_constraintTop_toTopOf="parent">
-
-                                  <TextView
-                                      android:id="@+id/Vypis"
-                                      android:layout_width="match_parent"
-                                      android:layout_height="match_parent"
-                                      android:layout_weight="2"
-                                      android:scrollbars="horizontal|vertical"
-                                      android:text="..." />
-
-
-                                  <androidx.constraintlayout.widget.ConstraintLayout
-                                      android:layout_width="match_parent"
-                                      android:layout_height="match_parent"
-                                      android:layout_weight="8" />
-
-                              </LinearLayout>
-
-                              <com.example.dp11.MyKeyboard
-                                  android:id="@+id/keyboard"
-                                  android:layout_width="0dp"
-                                  android:layout_height="0dp"
-                                  android:orientation="vertical"
-                                  android:visibility="visible"
-                                  app:layout_constraintBottom_toBottomOf="parent"
-                                  app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
-                                  app:layout_constraintStart_toStartOf="parent"
-                                  app:layout_constraintTop_toTopOf="parent"
-                                  tools:layout_constrainedHeight="true">
-
-                              </com.example.dp11.MyKeyboard>
-
-                          </androidx.constraintlayout.widget.ConstraintLayout>
-
-                      </LinearLayout>
-
-                      <ImageView
-                          android:id="@+id/imageView5"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          app:layout_constraintEnd_toEndOf="parent"
-                          app:layout_constraintTop_toTopOf="parent"
-                          app:srcCompat="@android:drawable/ic_menu_crop" />
-
-                  </androidx.constraintlayout.widget.ConstraintLayout>
-
-              </LinearLayout>
-
-          </LinearLayout>
-
-      </LinearLayout>
+    </LinearLayout>
 
   </androidx.constraintlayout.widget.ConstraintLayout>

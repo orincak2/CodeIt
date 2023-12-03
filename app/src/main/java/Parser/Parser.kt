@@ -77,8 +77,7 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
         while(terminated != true){
             executeP()
         }
-        pg.cc = Color.GREEN
-        pg.cc = Color.CYAN
+
     }
     fun fromAnyToFloat(anyFloatValue: Any):Float{
         if(anyFloatValue is Float){

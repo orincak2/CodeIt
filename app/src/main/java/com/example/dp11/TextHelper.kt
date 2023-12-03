@@ -17,7 +17,7 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
     var but14 = but4
     var but15 = but5
     var eText = text
-    var input = ""
+    var inputt = ""
     var index = 0
     var look = '0'
     var token = ""
@@ -35,7 +35,9 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
 
     fun setWords(){
         var lstWords = eText!!.text.toString().split(" ")
-        var sLastWord = lstWords[lstWords.size-1].replace("[","").replace("]","").replace("=","").replace(">","").replace("<","")
+        var sLastWordpom = lstWords[lstWords.size-1].split("\n")
+        var sLastWordpom2 = sLastWordpom[sLastWordpom.size-1].split(".")
+        var sLastWord = sLastWordpom2[sLastWordpom2.size-1].replace("[","").replace("]","").replace("=","").replace(">","").replace("<","")
         for (sWord in wordHelper){
             if(sWord.iMainPrio > 100 && sWord.myEqual(sLastWord)){
                 var iIndex = wordHelper.indexOf(sWord)
@@ -72,7 +74,7 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
     
     fun setColors(){
 
-        input = eText!!.text.toString()
+        inputt = eText!!.text.toString()
         index = 0
         look = '0'
         token = ""
@@ -91,6 +93,8 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
                 pom += getColoredText(token, Color.rgb(255, 165, 0).toString())
             }else if(token == "true" || token == "false"){
                 pom += getColoredText(token, Color.rgb(255, 165, 0).toString())
+            }else if(token == "vypis" || token == "print"){
+            pom += getColoredText(token, Color.BLUE.toString())
             }else if(token[0] == '\"'){
                 pom += getColoredText(token, Color.GREEN.toString())
             }else if((wordHelper.any { it.myEqual(token) })){
@@ -140,7 +144,7 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
                 next()
             }
             kind = WORD
-            if(token != "definuj" && token != "def" && token != "fun" && token != "metoda"&& token != "funkcia" && token != "for" && token != "cyklus" && token != "foreach" && token != "opakuj" && token != "repeat" && token != "kym" && token != "while" && token != "ak" && token != "if" && token != "inak" && token != "else" && token != "vrat" && token != "return" && token != "true" && token != "false"){
+            if(token != "definuj" && token != "def" && token != "fun" && token != "metoda"&& token != "funkcia" && token != "for" && token != "cyklus" && token != "foreach" && token != "opakuj" && token != "repeat" && token != "kym" && token != "while" && token != "ak" && token != "if" && token != "inak" && token != "else" && token != "vrat" && token != "return" && token != "true" && token != "false" && token != "vypis" && token != "print"){
                 for(x in wordHelper){
                     if(x.sText == token){
                         return result
@@ -186,11 +190,11 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
     }
 
     fun next(){
-        if(index >= input.length){
+        if(index >= inputt.length){
             val asciiValue = 0
             look = asciiValue.toChar()
         }else{
-            look = input[index]
+            look = inputt[index]
             index += 1
         }
     }
