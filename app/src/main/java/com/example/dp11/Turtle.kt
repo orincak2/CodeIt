@@ -6,15 +6,19 @@ import kotlin.random.Random
 
 
 
-class Turtle(pg: Playground, xx: Double = 400.0, yy:Double = 400.0) {
+class Turtle(pg: Playground, xx: Float = 0F, yy:Float = 0F, colorn: String = "red") {
 
     var randomx: Double = 100.0 + Random.nextDouble() * (400.0 - 100.0)
     var randomy: Double = 100.0 + Random.nextDouble() * (400.0 - 100.0)
-    var x = randomx
-    var y = randomy
+    var x = xx
+    var y = yy
     var playground = pg
     var uhol = 0.toFloat()
     var color = Color.RED
+    init {
+        farba(colorn)
+    }
+
     fun dopredu(iD : Float){
         if(playground.visibility == View.INVISIBLE){
             playground.setVisibility(View.VISIBLE)
@@ -28,8 +32,8 @@ class Turtle(pg: Playground, xx: Double = 400.0, yy:Double = 400.0) {
         pom.add(xx.toFloat())
         pom.add(yy.toFloat())
         playground.addCiara(pom,color)
-        x = xx
-        y = yy
+        x = xx.toFloat()
+        y = yy.toFloat()
     }
     fun vlavo(u : Float){
         if(playground.visibility == View.INVISIBLE){
@@ -73,8 +77,8 @@ class Turtle(pg: Playground, xx: Double = 400.0, yy:Double = 400.0) {
         playground.setVisibility(View.INVISIBLE)
         playground.ciara = emptyList<Float>().toMutableList()
         playground.ciary = emptyList<Ciara>().toMutableList()
-        x = 400.0
-        y = 400.0
+        x = 0F
+        y = 0F
         uhol = 0.toFloat()
         playground.cc = color
         playground.invalidate()

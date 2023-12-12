@@ -203,37 +203,41 @@ class MainActivity : AppCompatActivity() {
         }
 
         but1!!.setOnClickListener {
-          /* txt!!.setText("d = 1 a = turtle b = turtle\n" +
+           txt!!.setText("d = 1 a = turtle b = turtle\n" +
                     "definuj krok(){a.dopredu d b.dopredu d}\n" +
                     "definuj toc(){a.vpravo 70 b.vpravo 70}\n" +
                    "definuj zvec(h) {vrat d + h}\n" +
-                    "kym d < 150 {krok() toc() d = zvec(7)}")*/
-            wordHelpButttonClicked(but1)
+                    "kym d < 150 {krok() toc() d = zvec(7)}")
+            //wordHelpButttonClicked(but1)
         }
         but2!!.setOnClickListener {
-           /* txt!!.setText("d = true\n" +
-                    "opakuj 2 \n{\n\tak d: \n\t\tvypis 100" +
-                    "\n\tinak:\n\t\tvypis 200 \nd = not d}")*/
-            wordHelpButttonClicked(but2)
+            txt!!.setText("a = turtle(100,100, \"modra\") b = turtle(200,200) a.dopredu(200) b.dopredu 300" +
+                    "\n a.position(300,300) a.dopredu(100)")
+            //wordHelpButttonClicked(but2)
         }
         but3!!.setOnClickListener {
-          /*  txt!!.setText("d = \"aaa\" " +
+            txt!!.setText("d = true " +
                     "\nak d:" +
                     "\n\ta=1" +
                     "\n\tkym a<3:" +
                     "\n\t\tvypis 100" +
-                    "\n\t\ta = a+1"+
+                    "\n\t\ta = a + 1"+
                     "\nelse:" +
                     "\n\tvypis 200" +
-                    "\nvypis 300")*/
-            wordHelpButttonClicked(but3)
+                    "\nvypis 300")
+            //wordHelpButttonClicked(but3)
         }
         but4!!.setOnClickListener {
-               /* txt!!.setText("c = 4 b = [7,2,1,\"nieco\"] a = 1 " +
-                        "\nfor x = 0 x < c:" +
-                        "\n\ta = a+ b[x]" +
-                        "\n\tvypis a")*/
-            wordHelpButttonClicked(but4)
+            txt!!.setText("pole = [1, 2, 3, 4]" +
+                    "\n res = 0" +
+                    "\n def sucetpola(pol, velkost){" +
+                    "\n\t for i in 0..velkost{" +
+                    "\n\t\t res = res + pol[i]" +
+                    "\n\t }" +
+                    "\n\t return res" +
+                    "\n}" +
+                    "\nvypis(\"sucet pola je: \" + sucetpola(pole,4))")
+            //wordHelpButttonClicked(but4)
         }
         but5!!.setOnClickListener {
            /* txt!!.setText("a = true" +

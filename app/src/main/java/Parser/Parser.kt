@@ -4,6 +4,7 @@ package Parser
 import Turtle.Farba
 import Turtle.Fd
 import Turtle.Lt
+import Turtle.Position
 import Turtle.Rt
 import android.graphics.Color
 import android.view.View
@@ -167,6 +168,15 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
             pc += 1
             mem[top + 1] = (fromAnyToFloat(mem[top + 1]) > fromAnyToFloat(mem[top])).toFloat()
             top = top + 1
+        }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_CHOSE.toFloat()){
+            //pc += 1
+            var pom1 = fromAnyToFloat(mem[top + 1])
+            var pom2 = fromAnyToFloat(mem[top])
+            if(pom1 < pom2){
+                mem[pc] = INSTRUCTION_LESS
+            }else{
+                mem[pc] = INSTRUCTION_GREATER
+            }
         } else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_LESSEQUAL.toFloat()){
             pc += 1
             mem[top + 1] = (fromAnyToFloat(mem[top + 1]) <= fromAnyToFloat(mem[top])).toFloat()
@@ -196,6 +206,13 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
             var turtlee = mem[top + 1] as Turtle
             turtlee.farba(fromAnyTo(mem[top]).toString())
             top += 2
+        }
+        else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_SET_POSITION.toFloat()){
+            pc += 1
+            var turtlee = mem[top + 2] as Turtle
+            turtlee.x =fromAnyToFloat(mem[top +1])
+            turtlee.y =fromAnyToFloat(mem[top])
+            top += 3
         }
         else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_SET.toFloat()){
             pc += 1
@@ -386,7 +403,7 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                 }
                 result.add(pom)
             }
-            else if (token == "for" || token == "cyklus" || token == "foreach") {
+            else if (token == "for" || token == "cyklus" || token == "forEach") {
                 var navysetab = tabcount - tabindex
                 scan()
                 if(token == "("){
@@ -405,9 +422,12 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                 var pom2: Assign? = null
                 var pom3: Assign? = null
                 var prve = expr()
-                if(token == "." || token == name){
+                if(token == "." || token == "," || token == ";" || token == name){
                     scan()
-                    if(token == "." || token == "<") {
+                    if(token == name){
+                       scan()
+                    }
+                    if(token == "." || token == "<" || token == ">") {
                         scan()
                     }
                     rangeEnd = expr()
@@ -415,7 +435,7 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                     pom = Assign(pomL, prve)
                     globals[name] = pomL
                     globalvaradr += 1
-                    test = Less(pomL, rangeEnd)
+                    test = TestFor(pomL, rangeEnd)
                 }else{
                     if(prve is MyList) {
                         var pomL3 = GlobalVariable(name+"FL", globalvaradr.toFloat())
@@ -453,6 +473,9 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                 var rangeStart = expr()*/
                 //check(SYMBOL, "..")
                 //check(SYMBOL, "[")
+                if(token == ")"){
+                    scan()
+                }
                 var boltab = false
                 if(token == ":"){
                     tabindex += 1 + navysetab
@@ -591,6 +614,24 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                                     result.add(Farba(nieco as Variable, addsub()))
                                 }
                             }
+                            if (token == "position" || token == "pozicia" || token == "poloha" || token == "setPosition") {
+                                scan()
+                                if(token == "(" || token == "=") {
+                                    scan()
+                                    var xx = addsub()
+                                    scan()
+                                    var yy = addsub()
+                                    result.add(Position(nieco as Variable, xx, yy))
+                                    if(token == ")"){
+                                        scan()
+                                    }
+                                }else{
+                                    var xx = addsub()
+                                    scan()
+                                    var yy = addsub()
+                                    result.add(Position(nieco as Variable, xx, yy))
+                                }
+                            }
                         } else {
                             var subr = globals[name] as Subroutine
                             var agrs = Block()
@@ -649,12 +690,32 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                             }
                             if (token == "farba" || token == "color" || token == "setColor" || token == "nastavFarbu") {
                                 scan()
-                                if(token == "(") {
+                                if(token == "(" || token == "=") {
                                     scan()
                                     result.add(Farba(nieco as Variable, addsub()))
-                                    scan()
+                                    if(token == ")"){
+                                        scan()
+                                    }
                                 }else{
                                     result.add(Farba(nieco as Variable, addsub()))
+                                }
+                            }
+                            if (token == "position" || token == "pozicia" || token == "poloha" || token == "setPosition") {
+                                scan()
+                                if(token == "(" || token == "=") {
+                                    scan()
+                                    var xx = addsub()
+                                    scan()
+                                    var yy = addsub()
+                                    result.add(Position(nieco as Variable, xx, yy))
+                                    if(token == ")"){
+                                        scan()
+                                    }
+                                }else{
+                                    var xx = addsub()
+                                    scan()
+                                    var yy = addsub()
+                                    result.add(Position(nieco as Variable, xx, yy))
                                 }
                             }
                         }
@@ -795,14 +856,32 @@ fun elementsO():MyList{
     fun operand():Syntax{
         var result = Syntax()
         if(kind == WORD){
-            if(token == "false"){
+            if(token == "false" || token == "False"){
                 result = Const(0.toFloat())
             }else if (token == "cervena" || token == "modra" || token == "red" || token == "blue"){
                 result = Strings(token.replace("\"",""))
-            }else if (token == "true"){
+            }else if (token == "true" || token == "True"){
                 result = Const(1.toFloat())
-            }else if (token == "turtle"){
-                result = Trutl(Turtle(pg))
+            }else if (token == "turtle" || token == "korytnacka" || token == "pero" || token == "pen"){
+                scan()
+                var turtleX = 0F
+                var turtleY = 0F
+                var turtleColor = "red"
+                if(token == "("){
+                    scan()
+                    turtleX = token.toFloat()
+                    scan() //,
+                    scan()
+                    turtleY = token.toFloat()
+                    scan()
+                    if(token == ","){
+                        scan()
+                        turtleColor = token.replace("\"","")
+                        scan()
+                    }
+                    scan()
+                }
+                return Trutl(Turtle(pg,turtleX, turtleY,turtleColor))
             }else if (token.count() > 0 && token[0] == '\"'){
                 result = Strings(token.replace("\"",""))
             }else {
