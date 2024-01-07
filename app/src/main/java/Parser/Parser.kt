@@ -64,9 +64,9 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
         //subroutines = mutableMapOf<String, Subroutine>()
         var program = parse()
         check(NOTHING)
-        counter_adr = 200
-        mem = mutableListOf<Any>(300)
-        mem.addAll(List(300) { Any() })
+        counter_adr = 500
+        mem = mutableListOf<Any>(1000)
+        mem.addAll(List(1000) { Any() })
         adr = 0
         poke(INSTRUCTION_JUMP)
         poke(globalvaradr)
@@ -440,7 +440,7 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                     pom = Assign(pomL, prve)
                     globals[name] = pomL
                     globalvaradr += 1
-                    test = TestFor(pomL, rangeEnd)
+                    test = Less(pomL, rangeEnd)
                 }else{
                     if(prve is MyList) {
                         var pomL3 = GlobalVariable(name+"FL", globalvaradr.toFloat())

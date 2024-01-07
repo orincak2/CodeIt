@@ -203,42 +203,98 @@ class MainActivity : AppCompatActivity() {
         }
 
         but1!!.setOnClickListener {
-           txt!!.setText("d = 1 a = turtle(200,200,\"orange\") b = turtle(450,200,\"zlta\")\n" +
-                    "definuj krok(){a.dopredu d b.dopredu d}\n" +
+          /* txt!!.setText("a = turtle(300,300, \"modra\")" +
+                   "\nd = 1" +
+                   "\n far = [\"modra\",\"cervena\",\"zlta\",\"oranzova\",\"zelena\"]" +
+                   "\n vyber = 3" +
+                   "\n" +
+                   "\ndefinuj krok(kor, dlzka):\n\tkor.dopredu(dlzka)\n" +
+                   "\ndefinuj toc(kor, uhol):\n\tkor.vpravo(uhol)\n" +
+                   "\ndefinuj zmenfarbu(kor):\n" +
+                   "\tkor.farba(far[vyber]) \n" +
+                   "\tvyber = vyber + 1 \n" +
+                   "\tif(vyber > 4):\n" +
+                   "\t\tvyber = 0\n" +
+                   "\n" +
+                   "kym(d < 250):\n" +
+                   "\tkrok(a, d) \n" +
+                   "\ttoc(a, 65) \n" +
+                   "\tzmenfarbu(a) \n" +
+                   "\td = d + 10")*/
+
+
+
+               /*"d = 1 a = turtle(200,200,\"orange\") \n b = turtle(450,200,\"zlta\")\n" +
+                    "definuj krok(kora, korb){kora.dopredu d korb.dopredu d}\n" +
                     "definuj toc(){a.vpravo 70 b.vpravo 70}\n" +
                    "definuj zvec(h) {vrat d + h}\n" +
-                    "kym d < 150 {krok() toc() d = zvec(7)}")
-            //wordHelpButttonClicked(but1)
+                    "kym d < 150 {krok(a, b) toc() d = zvec(7)}")*/
+            wordHelpButttonClicked(but1)
         }
         but2!!.setOnClickListener {
-            txt!!.setText("a = turtle(100,100, \"modra\") b = turtle(200,200) a.dopredu(200) b.dopredu 300" +
-                    "\n a.position(300,300) a.dopredu(100)")
-            //wordHelpButttonClicked(but2)
+           /* txt!!.setText("a = turtle(300,300, \"modra\")" +
+                    "\nd = 1" +
+                    "\n far = [\"modra\",\"cervena\",\"zlta\",\"oranzova\",\"zelena\"]" +
+                    "\n vyber = 0" +
+                    "\ndefinuj krok(kor, dlzka){kor.dopredu(dlzka)}\n" +
+                    "definuj toc(kor, uhol){kor.vpravo(uhol)}\n" +
+                    "definuj zmenfarbu(kor){kor.farba(far[vyber]) vyber = vyber + 1 if(vyber > 4){vyber = 0}}\n" +
+                    "kym(d < 250) {krok(a, d) toc(a, 70) zmenfarbu(a) d = d + 10}")*/
+            wordHelpButttonClicked(but2)
         }
         but3!!.setOnClickListener {
-            txt!!.setText("d = true " +
-                    "\nak d:" +
-                    "\n\ta=1" +
-                    "\n\tkym a<3:" +
-                    "\n\t\tvypis 100" +
-                    "\n\t\ta = a + 1"+
-                    "\nelse:" +
-                    "\n\tvypis 200" +
-                    "\nvypis 300")
-            //wordHelpButttonClicked(but3)
+           /* txt!!.setText("a = turtle(300,300, \"modra\")" +
+                    "\nd = 1" +
+                    "\n far = [\"modra\",\"cervena\",\"zlta\",\"oranzova\",\"zelena\"]" +
+                    "\n vyber = 2" +
+                    "\n" +
+                    "\ndefinuj krok(kor, dlzka)\n{\n\tkor.dopredu(dlzka)\n}\n" +
+                    "\ndefinuj toc(kor, uhol)\n{\n\tkor.vpravo(uhol)\n}\n" +
+                    "\ndefinuj zmenfarbu(kor)\n{\n" +
+                    "\tkor.farba(far[vyber]) \n" +
+                    "\tvyber = vyber + 1 \n" +
+                    "\tif(vyber > 4)\n" +
+                    "\t{\n\t\tvyber = 0\n\t}\n" +
+                    "}\n\n" +
+                    "kym(d < 250) \n{\n" +
+                    "\tkrok(a, d) \n" +
+                    "\ttoc(a, 75) \n" +
+                    "\tzmenfarbu(a) \n" +
+                    "\td = d + 10\n}")*/
+            wordHelpButttonClicked(but3)
         }
         but4!!.setOnClickListener {
-            txt!!.setText("pole = [1, 2, 3, 4]" +
-                    "\n res = 0" +
-                    "\n pole.add(5)" +
-                    "\n def sucetpola(pol, velkost){" +
-                    "\n\t for i in 0..velkost{" +
-                    "\n\t\t res = res + pol[i]" +
-                    "\n\t }" +
-                    "\n\t return res" +
-                    "\n}" +
-                    "\nvypis(\"sucet pola je: \" + sucetpola(pole,4))")
-            //wordHelpButttonClicked(but4)
+            /*txt!!.setText("pole = [1, 2, 3, 4]" +
+                    "\npole.add(6)" +
+                    "\nres = 0" +
+                    "\nfor i in 0..5:" +
+                    "\n\tres = res + pole[i]" +
+                    "\nvypis(\"1.sucet pola je: \" + res)" +
+                    "" +
+                    "\n" +
+                    "\nres = 0" +
+                    "\nfor j = 0; j < 5:" +
+                    "\n\tres = res + pole[j]" +
+                    "\nvypis(\"2.sucet pola je: \" + res)" +
+                    "" +
+                    "\n" +
+                    "\nres = 0" +
+                    "\nfor x in pole:" +
+                    "\n\tres = res + x" +
+                    "\nvypis(\"3.sucet pola je: \" + res)"+
+                    "" +
+                    "\n" +
+                    "\nres = 0" +
+                    "\n pom = 0" +
+                    "\nopakuj 5:" +
+                    "\n\tres = res + pole[pom]" +
+                    "\n\tpom = pom + 1" +
+                    "\nvypis(\"4.sucet pola je: \" + res)"+
+                    "" +
+                    "\n" +
+                    "\nfor y in pole:" +
+                    "\n\tvypis(y)")*/
+            wordHelpButttonClicked(but4)
         }
         but5!!.setOnClickListener {
            /* txt!!.setText("a = true" +
