@@ -61,11 +61,22 @@ class Turtle(pg: Playground, xx: Float = 0F, yy:Float = 0F, colorn: String = "re
     }
 
     fun farba(far: String){
-        if(far == "cervena"){
+        if(far == "cervena" || far == "red"){
+            color = Color.RED
+        }else if (far == "zlta" || far == "yellow"){
             color = Color.YELLOW
         }
-        else if (far == "modra"){
+        else if (far == "modra" || far == "blue"){
             color = Color.BLUE
+        }
+        else if (far == "green" || far == "zelena"){
+            color = Color.GREEN
+        }
+        else if (far == "biela" || far == "while"){
+            color = Color.WHITE
+        }
+        else if (far == "oranzova" || far == "orange"){
+            color = Color.rgb(255, 165, 0).toInt()
         }
         else{
             color = Color.BLACK

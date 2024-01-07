@@ -203,7 +203,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         but1!!.setOnClickListener {
-           txt!!.setText("d = 1 a = turtle b = turtle\n" +
+           txt!!.setText("d = 1 a = turtle(200,200,\"orange\") b = turtle(450,200,\"zlta\")\n" +
                     "definuj krok(){a.dopredu d b.dopredu d}\n" +
                     "definuj toc(){a.vpravo 70 b.vpravo 70}\n" +
                    "definuj zvec(h) {vrat d + h}\n" +
@@ -230,6 +230,7 @@ class MainActivity : AppCompatActivity() {
         but4!!.setOnClickListener {
             txt!!.setText("pole = [1, 2, 3, 4]" +
                     "\n res = 0" +
+                    "\n pole.add(5)" +
                     "\n def sucetpola(pol, velkost){" +
                     "\n\t for i in 0..velkost{" +
                     "\n\t\t res = res + pol[i]" +

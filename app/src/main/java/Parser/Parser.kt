@@ -64,9 +64,9 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
         //subroutines = mutableMapOf<String, Subroutine>()
         var program = parse()
         check(NOTHING)
-        counter_adr = 500
-        mem = mutableListOf<Any>(1000)
-        mem.addAll(List(1000) { Any() })
+        counter_adr = 200
+        mem = mutableListOf<Any>(300)
+        mem.addAll(List(300) { Any() })
         adr = 0
         poke(INSTRUCTION_JUMP)
         poke(globalvaradr)
@@ -173,9 +173,9 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
             var pom1 = fromAnyToFloat(mem[top + 1])
             var pom2 = fromAnyToFloat(mem[top])
             if(pom1 < pom2){
-                mem[pc] = INSTRUCTION_LESS
+                mem[pc] = INSTRUCTION_LESS.toFloat()
             }else{
-                mem[pc] = INSTRUCTION_GREATER
+                mem[pc] = INSTRUCTION_GREATER.toFloat()
             }
         } else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_LESSEQUAL.toFloat()){
             pc += 1
@@ -309,6 +309,11 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
             top += 2
             adr = pc
             (element as Syntax).generate()
+        }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_ADD_ELEMENT.toFloat()){
+            pc += 1
+            (mem[top] as MutableList<Syntax>).add(mem[pc] as Syntax)
+            top += 1
+            pc += 1
         }
         else {
             terminated = true
@@ -632,6 +637,17 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                                     result.add(Position(nieco as Variable, xx, yy))
                                 }
                             }
+                            if (token == "add" || token == "pridaj" || token == "vloz"){
+                                scan()
+                                if(token == "(" || token == "=") {
+                                    scan()
+                                    var xx = addsub()
+                                    result.add(AddElement(nieco as Variable, xx))
+                                    if(token == ")"){
+                                        scan()
+                                    }
+                                }
+                            }
                         } else {
                             var subr = globals[name] as Subroutine
                             var agrs = Block()
@@ -716,6 +732,17 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                                     scan()
                                     var yy = addsub()
                                     result.add(Position(nieco as Variable, xx, yy))
+                                }
+                            }
+                            if (token == "add" || token == "pridaj" || token == "vloz"){
+                                scan()
+                                if(token == "(" || token == "=") {
+                                    scan()
+                                    var xx = addsub()
+                                    result.add(AddElement(nieco as Variable, xx))
+                                    if(token == ")"){
+                                        scan()
+                                    }
                                 }
                             }
                         }
