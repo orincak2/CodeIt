@@ -188,6 +188,7 @@ class MainActivity : AppCompatActivity() {
                         0,
                         0.0f
                     )
+
                     openCloseTerminal!!.setImageResource(com.google.android.material.R.drawable.mtrl_ic_arrow_drop_up)
                     vypisl!!.setLayoutParams(param2)
                     spodok!!.setLayoutParams(param)
