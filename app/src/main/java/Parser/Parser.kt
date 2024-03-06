@@ -3,9 +3,12 @@ package Parser
 
 import Turtle.Farba
 import Turtle.Fd
+import Turtle.Kruh
 import Turtle.Lt
 import Turtle.Position
 import Turtle.Rt
+import Turtle.Stvorec
+import Turtle.Trojuholnik
 import android.graphics.Color
 import android.view.View
 import android.widget.TextView
@@ -62,8 +65,8 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
         localvardelta = 0
         //variables = mutableMapOf<String, Int>()
         //subroutines = mutableMapOf<String, Subroutine>()
-        var program = parse()
-        check(NOTHING)
+        var program = parse(0)
+        //check(NOTHING)
         counter_adr = 500
         mem = mutableListOf<Any>(1000)
         mem.addAll(List(1000) { Any() })
@@ -111,11 +114,35 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
         if(fromAnyToFloat(mem[pc]) == INSTRUCTION_FD.toFloat()){
             pc += 1
             var turtlee = mem[top + 1] as Turtle
-            turtlee.dopredu(fromAnyToFloat(mem[top]))
+            turtlee.dopredu(pg.pwidth.toFloat() * fromAnyToFloat(mem[top])/200)
             top += 2
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_MINUS.toFloat()){
             pc += 1
             mem[top] = -fromAnyToFloat(mem[top])
+        }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_STVOREC.toFloat()){
+            pc += 1
+            var turtlee = mem[top + 4] as Turtle
+            var x = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+3])/200
+            var y = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+2])/200
+            var v = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+1])/200
+            turtlee.stvorec(x,y,v,fromAnyTo(mem[top]).toString())
+            top += 5
+        }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_KRUH.toFloat()){
+            pc += 1
+            var turtlee = mem[top + 4] as Turtle
+            var x = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+3])/200
+            var y = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+2])/200
+            var v = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+1])/200
+            turtlee.kruh(x,y,v,fromAnyTo(mem[top]).toString())
+            top += 5
+        }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_TROJUHOLNIK.toFloat()){
+            pc += 1
+            var turtlee = mem[top + 4] as Turtle
+            var x = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+3])/200
+            var y = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+2])/200
+            var v = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+1])/200
+            turtlee.trojuholnik(x,y,v,fromAnyTo(mem[top]).toString())
+            top += 5
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_ADD.toFloat()){
             pc += 1
             mem[top + 1] = MojaTrieda(fromAnyTo(mem[top + 1])) + MojaTrieda(fromAnyTo(mem[top]))
@@ -321,8 +348,26 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
     }
 
 
-    fun parse(): Block {
+    fun parse(poradie: Int): Block {
         var result = Block()
+        if(poradie== 0) {
+            var basick = GlobalVariable("basicKoritnacka", globalvaradr.toFloat())
+            result.add(
+                Assign(
+                    basick,
+                    Trutl(
+                        Turtle(
+                            pg,
+                            pg.pwidth.toFloat() * 0.5.toFloat(),
+                            pg.height.toFloat() * 0.5.toFloat(),
+                            "black"
+                        )
+                    )
+                )
+            )
+            globals["basicKoritnacka"] = basick
+            globalvaradr += 1
+        }
 
         while (kind == WORD && tabindex <= tabcount ){
             if(token == "ak" || token == "if"){
@@ -341,10 +386,13 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                     tabindex += 1 + navysetab
                     boltab = true
                 }
-                //check(SYMBOL, "{")
+                check(SYMBOL, arrayOf("{", ":"))
                 scan()
-                var ifelse = IfElse(test, parse(), null)
-                //check(SYMBOL, "}")
+                var ifelse = IfElse(test, parse(1), null)
+
+                if(!boltab)
+                    check(SYMBOL, arrayOf("}"))
+
                 if(token == "}"){
                     scan()
                 }
@@ -352,10 +400,11 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                 if(token == "inak" || token == "else"){
                     if(boltab){
                         if(tabindex-1 != tabcount){
-                            throw Exception()
+                            throw Exception("Zle odsadenie")
                         }
                     }
                     scan()
+                    check(SYMBOL, arrayOf("{", ":"))
                 }
                 if(token == "{" || token == ":"){
                     if(token == ":" && !boltab){
@@ -364,7 +413,11 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                         boltab = true
                     }
                     scan()
-                    ifelse.bodyfalse = parse()
+                    ifelse.bodyfalse = parse(1)
+
+                    if(!boltab)
+                        check(SYMBOL, arrayOf("}"))
+
                     if(token == "}"){
                         scan()
                     }
@@ -376,17 +429,18 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
             }
             else if(token == "definuj" || token == "def" || token == "fun" || token == "metoda"|| token == "funkcia"){
                 if(tabindex != 0 || tabcount !=0){
-                    throw Exception("356")
+                    throw Exception("Metodu nieje mozne definovat vo vnutri ineho tela.")
                 }
                 scan()
-                check(WORD)
+                check(WORD, emptyArray())
                 var name = token
                 if(name in globals){
-                    throw IOException(token + "sa už používa")
+                    throw IOException(token + "sa už používa.")
                 }
                 scan()
                 var pom = Subroutine(name, params(), null)
                 globals[name] = pom
+                check(SYMBOL, arrayOf("{", ":"))
                 //check(SYMBOL, "{")
                 var boltab = false
                 if(token == ":"){
@@ -396,10 +450,13 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                 scan()
                 locals = pom.vars
                 localvardelta = -1
-                pom.body = parse()
+                pom.body = parse(1)
                 //pom.vars = locals
                 locals = mutableMapOf<String, Variable>()
                 //check(SYMBOL, "}")
+                if(!boltab)
+                    check(SYMBOL, arrayOf("}"))
+
                 if(token == "}"){
                     scan()
                 }
@@ -487,7 +544,7 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                     boltab = true
                 }
                 scan()
-                var loopBody = parse()
+                var loopBody = parse(1)
                 locals = mutableMapOf<String, Variable>()
                 //check(SYMBOL, "]")
                 if(boltab){
@@ -508,7 +565,7 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                     boltab = true
                 }
                 scan()
-                result.add(Repeat(n, parse()))
+                result.add(Repeat(n, parse(1)))
                 if(boltab){
                     tabindex -= (1 + navysetab)
                 }
@@ -518,7 +575,13 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
             }
             else if(token == "vrat" || token == "return"){
                 scan()
+                if(token == "("){
+                    scan()
+                }
                 result.add(Return(expr()))
+                if(token == ")"){
+                    scan()
+                }
             }
             else if(token == "vypis" || token == "print" || token == "printf"|| token == "println"){
                 scan()
@@ -543,18 +606,125 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                 }
                 //check(SYMBOL, "{")
                 var boltab = false
+                check(SYMBOL, arrayOf("{", ":"))
                 if(token == ":"){
                     tabindex += 1 + navysetab
                     boltab = true
                 }
                 scan()
-                result.add(While(test, parse()))
+                result.add(While(test, parse(1)))
                 if(boltab){
                     tabindex -= (1 + navysetab)
                 }
                 //check(SYMBOL, "}")
+                if(!boltab)
+                    check(SYMBOL, arrayOf("}"))
+
                 if(token == "}"){
                     scan()
+                }
+            }
+            else if (token == "dopredu" || token == "forward" || token == "vpred") {
+                scan()
+                if(token == "(" || token == "=") {
+                    scan()
+                    result.add(Fd(globals["basicKoritnacka"] as Variable, addsub()))
+                    if(token == ")")
+                        scan()
+                }else{
+                    result.add(Fd(globals["basicKoritnacka"] as Variable, addsub()))
+                }
+            }
+            else if (token == "vpravo" || token == "right") {
+                scan()
+                if(token == "(") {
+                    scan()
+                    result.add(Rt(globals["basicKoritnacka"] as Variable, addsub()))
+                    scan()
+                }else{
+                    result.add(Rt(globals["basicKoritnacka"] as Variable, addsub()))
+                }
+
+            }
+            else if (token == "vlavo" || token == "left") {
+                scan()
+                if(token == "(") {
+                    scan()
+                    result.add(Lt(globals["basicKoritnacka"] as Variable, addsub()))
+                    scan()
+                }else{
+                    result.add(Lt(globals["basicKoritnacka"] as Variable, addsub()))
+                }
+            }
+            else if (token == "stvorec" || token == "square") {
+                scan()
+                var Color= Syntax()
+                 Color = Strings("black")
+                var X= Syntax()
+                var Y= Syntax()
+                var velk = Syntax()
+                if(token == "(") {
+                    scan()
+                }
+                check(NUMBER, emptyArray())
+                X = addsub()
+                if(token == ",") {
+                    scan() //,
+                }
+                check(NUMBER, emptyArray())
+                Y = addsub()
+                if(token == ",") {
+                    scan() //,
+                }
+                check(NUMBER, emptyArray())
+                velk = addsub()
+                if(token == ","){
+                        scan()
+                        Color = operand()
+                        scan()
+                    }
+                if(token == ")") {
+                    scan()
+                }
+
+                result.add(Stvorec(globals["basicKoritnacka"] as Variable,X,Y,velk,Color))
+            }
+            else if (token == "kruh") {
+                scan()
+
+            }
+            else if (token == "trojuholnik") {
+                scan()
+
+            }
+            else if (token == "farba" || token == "color" || token == "setColor" || token == "nastavFarbu") {
+                scan()
+                if(token == "(" || token == "=") {
+                    scan()
+                    result.add(Farba(globals["basicKoritnacka"] as Variable, addsub()))
+                    if(token == ")"){
+                        scan()
+                    }
+                }else{
+                    result.add(Farba(globals["basicKoritnacka"] as Variable, addsub()))
+                }
+            }
+            else if (token == "position" || token == "pozicia" || token == "poloha" || token == "setPosition") {
+                scan()
+                if(token == "(" || token == "=") {
+                    scan()
+                    var xx = addsub()
+                    scan()
+                    var yy = addsub()
+                    result.add(Position(globals["basicKoritnacka"] as Variable, xx, yy))
+                    if(token == ")"){
+                        scan()
+                    }
+                }else{
+                    var xx = addsub()
+                    scan()
+                    var yy = addsub()
+                    result.add(Position(globals["basicKoritnacka"] as Variable, xx, yy))
                 }
             }
             else{
@@ -564,6 +734,7 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                 if(token == "["){
                     scan()
                     pomIndex = addsub()
+                    check(SYMBOL, arrayOf("]"))
                     scan()
                 }
                 if(token != "="){
@@ -578,10 +749,11 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                             scan()
                             if (token == "dopredu" || token == "forward" || token == "vpred") {
                                 scan()
-                                if(token == "(") {
+                                if(token == "(" || token == "=") {
                                     scan()
                                     result.add(Fd(nieco as Variable, addsub()))
-                                    scan()
+                                    if(token == ")")
+                                        scan()
                                 }else{
                                     result.add(Fd(nieco as Variable, addsub()))
                                 }
@@ -660,7 +832,7 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                                         agrs.add(expr())
                                     }
                                 }
-                                check(SYMBOL, ")")
+                                check(SYMBOL, arrayOf(")"))
                                 scan()
                             }
                             if (agrs.items.count() != subr.paramcount) {
@@ -794,6 +966,7 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                                 }
                             }
                         }else{
+
                             var pomL = GlobalVariable(name, globalvaradr.toFloat())
                             if(token == "["){
                                 if(pomIndex != null){
@@ -829,7 +1002,7 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                 scan()
                 while(token == ","){
                     scan()
-                    check(WORD)
+                    check(WORD, emptyArray())
                     if(token in result){
                         throw Exception("Duplicitný názov parametra")
                     }
@@ -837,7 +1010,7 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                     scan()
                 }
             }
-            //check(SYMBOL, ")")
+            check(SYMBOL, arrayOf(")"))
             scan()
             var n = 1 + result.count()
             for(prvok in result.values){
@@ -858,7 +1031,7 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                     agrs.add(expr())
                 }
             }
-            check(SYMBOL, "]")
+            check(SYMBOL, arrayOf("]"))
             scan()
         }
         return MyList(agrs)
@@ -875,7 +1048,7 @@ fun elementsO():MyList{
                 agrs.add(expr())
             }
         }
-        check(SYMBOL, "]")
+        check(SYMBOL, arrayOf("]"))
     }
     return MyList(agrs)
 }
@@ -929,7 +1102,7 @@ fun elementsO():MyList{
                                     agrs.add(expr())
                                 }
                             }
-                            check(SYMBOL, ")")
+                            //check(SYMBOL, ")")
                         }
                         if(agrs.items.count() != subr.paramcount){
                             throw Exception("Nesprávny počet parametrov")
@@ -946,7 +1119,7 @@ fun elementsO():MyList{
             //scan()
             result = elementsO() // AK je nove pole( napr. [1,4,6] vo for cykle
         }else{
-            check(NUMBER)
+            //check(NUMBER)
             result = Const(token.toFloat())
         }
         scan()
@@ -967,7 +1140,7 @@ fun elementsO():MyList{
         }
         scan()
         var result = expr()
-        check(SYMBOL, ")")
+       // check(SYMBOL, ")")
         scan()
         return result
     }
@@ -1066,12 +1239,19 @@ fun elementsO():MyList{
         return result
     }
 
-    fun check(expected_kind: Int, expected_token: String = ""){
+    enum class KindType() {
+        nic,
+        cislo,
+        slovo,
+        symbol
+    }
+
+    fun  check(expected_kind: Int, expected_token: Array<String>){
         if(kind != expected_kind){
-            throw IOException("zly kind ocakaval som: " + expected_kind + ", dostal som: " + kind + " " + token)
+            throw IOException("zly typ, ocakaval som: " + KindType.values()[expected_kind].name + ", dostal som slovo: " + token + "?" + index)
         }
-        if(expected_token != "" && token != expected_token){
-            throw IOException("zly token ocakaval som: " + expected_token + ", dostal som: " + token)
+        if(expected_token.size > 0 && !expected_token.contains(token)){
+            throw IOException("zly token som: " + expected_token.joinToString(" alebo ") + ", dostal som: " + token+ "?" + index)
         }
     }
 

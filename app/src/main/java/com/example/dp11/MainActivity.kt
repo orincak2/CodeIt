@@ -2,9 +2,13 @@ package com.example.dp11
 
 
 import Parser.Parser
+import Parser.mem
+import Parser.top
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.text.InputType
 import android.text.Spannable
 import android.text.SpannableString
@@ -204,7 +208,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         but1!!.setOnClickListener {
-          /* txt!!.setText("a = turtle(300,300, \"modra\")" +
+           txt!!.setText("a = turtle(300,300, \"modra\")" +
                    "\nd = 1" +
                    "\n far = [\"modra\",\"cervena\",\"zlta\",\"oranzova\",\"zelena\"]" +
                    "\n vyber = 3" +
@@ -221,7 +225,7 @@ class MainActivity : AppCompatActivity() {
                    "\tkrok(a, d) \n" +
                    "\ttoc(a, 65) \n" +
                    "\tzmenfarbu(a) \n" +
-                   "\td = d + 10")*/
+                   "\td = d + 10")
 
 
 
@@ -230,21 +234,21 @@ class MainActivity : AppCompatActivity() {
                     "definuj toc(){a.vpravo 70 b.vpravo 70}\n" +
                    "definuj zvec(h) {vrat d + h}\n" +
                     "kym d < 150 {krok(a, b) toc() d = zvec(7)}")*/
-            wordHelpButttonClicked(but1)
+            //wordHelpButttonClicked(but1)
         }
         but2!!.setOnClickListener {
-           /* txt!!.setText("a = turtle(300,300, \"modra\")" +
+            txt!!.setText("a = turtle(300,300, \"modra\")" +
                     "\nd = 1" +
                     "\n far = [\"modra\",\"cervena\",\"zlta\",\"oranzova\",\"zelena\"]" +
                     "\n vyber = 0" +
-                    "\ndefinuj krok(kor, dlzka){kor.dopredu(dlzka)}\n" +
-                    "definuj toc(kor, uhol){kor.vpravo(uhol)}\n" +
-                    "definuj zmenfarbu(kor){kor.farba(far[vyber]) vyber = vyber + 1 if(vyber > 4){vyber = 0}}\n" +
-                    "kym(d < 250) {krok(a, d) toc(a, 70) zmenfarbu(a) d = d + 10}")*/
-            wordHelpButttonClicked(but2)
+                    "\ndefinuj krok(kor, dlzka){dopredu(dlzka)}\n" +
+                    "definuj toc(kor, uhol){vpravo(uhol)}\n" +
+                    "definuj zmenfarbu(kor){farba(far[vyber]) vyber = vyber + 1 if(vyber > 4){vyber = 0}}\n" +
+                    "kym(d < 25) {krok(a, d) toc(a, 70) zmenfarbu(a) d = d + 1}")
+            //wordHelpButttonClicked(but2)
         }
         but3!!.setOnClickListener {
-           /* txt!!.setText("a = turtle(300,300, \"modra\")" +
+            txt!!.setText("a = turtle(300,300, \"modra\")" +
                     "\nd = 1" +
                     "\n far = [\"modra\",\"cervena\",\"zlta\",\"oranzova\",\"zelena\"]" +
                     "\n vyber = 2" +
@@ -261,11 +265,11 @@ class MainActivity : AppCompatActivity() {
                     "\tkrok(a, d) \n" +
                     "\ttoc(a, 75) \n" +
                     "\tzmenfarbu(a) \n" +
-                    "\td = d + 10\n}")*/
-            wordHelpButttonClicked(but3)
+                    "\td = d + 10\n}")
+           // wordHelpButttonClicked(but3)
         }
         but4!!.setOnClickListener {
-            /*txt!!.setText("pole = [1, 2, 3, 4]" +
+            txt!!.setText("pole = [1, 2, 3, 4]" +
                     "\npole.add(6)" +
                     "\nres = 0" +
                     "\nfor i in 0..5:" +
@@ -294,11 +298,11 @@ class MainActivity : AppCompatActivity() {
                     "" +
                     "\n" +
                     "\nfor y in pole:" +
-                    "\n\tvypis(y)")*/
-            wordHelpButttonClicked(but4)
+                    "\n\tvypis(y)")
+          //  wordHelpButttonClicked(but4)
         }
         but5!!.setOnClickListener {
-           /* txt!!.setText("a = true" +
+            txt!!.setText("a = true" +
                     "\n definuj krok(b):" +
                     "" +
                     "\n\tak (a):" +
@@ -310,18 +314,30 @@ class MainActivity : AppCompatActivity() {
                     "\n\t\tvypis 200" +
                     "\n\treturn b" +
                     "" +
-                    "\n krok(4)")*/
+                    "\n krok(4)")
 
-            wordHelpButttonClicked(but5)
+            //wordHelpButttonClicked(but5)
         }
         print!!.setMovementMethod(ScrollingMovementMethod())
         runButton!!.setOnClickListener {
-           parser!!.run(txt!!)
+            try {
+                parser!!.run(txt!!)
+            } catch (e: Exception) {
+                print!!!!.setText(Html.fromHtml(getColoredText(e.message.toString(), Color.RED.toString())))
+                var pom = e.message.toString().split('?')
+                if (pom.size > 1)
+                    parseColor(e.message.toString().split('?')[1].toInt())
+            }
+
         }
     }
 
-    fun parseColor(){
-        th!!.setColors()
+    fun getColoredText(text: String, color: String): String? {
+        return "<font color=$color>$text</font>"
+    }
+    
+    fun parseColor(ind: Int = 0){
+        th!!.setColors(ind)
     }
     fun setWords(){
         th!!.setWords()

@@ -2,6 +2,7 @@ package com.example.dp11
 
 import android.graphics.Color
 import android.view.View
+import java.lang.Math.sqrt
 import kotlin.random.Random
 
 
@@ -58,6 +59,65 @@ class Turtle(pg: Playground, xx: Float = 0F, yy:Float = 0F, colorn: String = "re
             uhol = (uhol - u) + 360
         }
         //playground.invalidate()
+    }
+
+    fun stvorec(xx : Float, yy: Float, velkost : Float, farva: String){
+        var puhol = uhol
+        var pfarva = color
+        var px = x
+        var py = y
+        uhol = 0F
+        x = xx-(velkost/2)
+        y = yy+(velkost/2)
+        farba(farva)
+        for (x in 1..4){
+            dopredu(velkost)
+            vpravo(90F)
+        }
+        x = px
+        y = py
+        color = pfarva
+        uhol = puhol
+    }
+    fun trojuholnik(xx : Float, yy: Float, velkost : Float, farva: String){
+        var puhol = uhol
+        var pfarva = color
+        var px = x
+        var py = y
+        uhol = 0F
+        x = xx-(velkost/2)
+        y = yy+((velkost * sqrt(3.0)) / 4).toFloat()
+        farba(farva)
+        for (x in 1..3){
+            dopredu(velkost)
+            vpravo(120F)
+        }
+        x = px
+        y = py
+        color = pfarva
+        uhol = puhol
+    }
+
+    fun kruh(xx : Float, yy: Float, velkost : Float, farva: String){
+        var puhol = uhol
+        var pfarva = color
+        var px = x
+        var py = y
+        x = xx+(velkost)
+        y = yy
+        uhol = 0F
+        vpravo(90F)
+        farba(farva)
+        var obvod = 2* 3.141592653589 * velkost
+        for (x in 1..360){
+            dopredu(obvod.toFloat()/360)
+            vpravo(1F)
+        }
+        x = px
+        y = py
+        color = pfarva
+        uhol = puhol
+        vlavo(90F)
     }
 
     fun farba(far: String){

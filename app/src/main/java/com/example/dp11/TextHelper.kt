@@ -72,13 +72,14 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
         but15!!.text = wordHelper[4].sText
     }
     
-    fun setColors(){
+    fun setColors(ind : Int = 0){
 
         inputt = eText!!.text.toString()
         index = 0
         look = '0'
         token = ""
         kind = 0
+        var chyba = false
         var pom = ""
         next()
         pom = scan(pom)
@@ -87,7 +88,10 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
                 pom += getColoredText(token, Color.rgb(255, 165, 0).toString())
                 pom = scan(pom,true)
                 pom += getColoredText(token, Color.BLUE.toString())
-            }else if(token == "for" || token == "cyklus" || token == "foreach" || token == "opakuj" || token == "repeat" || token == "kym" || token == "while" || token == "ak" || token == "if" || token == "inak" || token == "else"){
+            }else if(ind != 0 && ind <= index && !chyba){
+                pom += getColoredText(token, Color.rgb(255,0,0).toString())
+                chyba = true
+            } else if(token == "for" || token == "cyklus" || token == "foreach" || token == "opakuj" || token == "repeat" || token == "kym" || token == "while" || token == "ak" || token == "if" || token == "inak" || token == "else"){
                 pom += getColoredText(token, Color.rgb(255,105,180).toString())
             }else if(token == "vrat" || token == "return"){
                 pom += getColoredText(token, Color.rgb(255, 165, 0).toString())
