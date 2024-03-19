@@ -61,6 +61,7 @@ var localvardelta = 0
 
 var input = "opakuj 10 [dopredu 70 vpravo 45]"
 var index = 0
+var pomindex = 0
 var look = '0'
 
 var token = ""

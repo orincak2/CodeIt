@@ -89,7 +89,7 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
                 pom = scan(pom,true)
                 pom += getColoredText(token, Color.BLUE.toString())
             }else if(ind != 0 && ind <= index && !chyba){
-                pom += getColoredText(token, Color.rgb(255,0,0).toString())
+                pom += getColoredTextWithBackground(token, Color.rgb(0,0,0).toString(),Color.rgb(255,0,0).toString())
                 chyba = true
             } else if(token == "for" || token == "cyklus" || token == "foreach" || token == "opakuj" || token == "repeat" || token == "kym" || token == "while" || token == "ak" || token == "if" || token == "inak" || token == "else"){
                 pom += getColoredText(token, Color.rgb(255,105,180).toString())
@@ -205,6 +205,11 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
 
     fun getColoredText(text: String, color: String): String? {
         return "<font color=$color>$text</font>"
+    }
+
+    fun getColoredTextWithBackground(text: String, textColor: String, backgroundColor: String): String {
+        // Nastavíte farbu textu a pozadia pomocou štýlov CSS v značke <span>
+        return "<span style='color: $textColor; background-color: $backgroundColor;'>$text</span>"
     }
 
     fun setText(text: EditText?){

@@ -323,7 +323,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 parser!!.run(txt!!)
             } catch (e: Exception) {
-                print!!!!.setText(Html.fromHtml(getColoredText(e.message.toString(), Color.RED.toString())))
+                print!!!!.setText(Html.fromHtml(getColoredText(e.message.toString().split('?')[0], Color.RED.toString())))
                 var pom = e.message.toString().split('?')
                 if (pom.size > 1)
                     parseColor(e.message.toString().split('?')[1].toInt())
