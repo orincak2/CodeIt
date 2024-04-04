@@ -13,6 +13,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.TextView
 import com.example.dp11.Playground
+import com.example.dp11.TextHelper
 import com.example.dp11.Turtle
 import com.google.android.material.textview.MaterialTextView
 
@@ -23,12 +24,14 @@ import kotlin.collections.List
 fun Boolean.toFloat() = if (this) 1.toFloat() else 0.toFloat()
 fun Float.toBoolean() = if (this == 1.toFloat()) true else false
 
-class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
+class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax() {
     var pg = npg
     var print = nprint
     var turtle = Turtle(pg!!)
     var tabindex = 0
     var tabcount = 0
+    var bolEnter = false
+    var txH = texH
     class MojaTrieda(val hodnota: Any) {
         operator fun plus(inyObjekt: MojaTrieda): Any {
             if(this.hodnota is Float){
@@ -53,12 +56,14 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
 
     fun run(txt:TextView){
         turtle.reset()
-        input = txt!!.text.toString()
+        reset()
+        input = txt!!.text.toString().trim()
         //input.replace("   ", "\t")
         tabindex = 0
         tabcount = 0
         index = 0
         pomindex = 0
+        bolEnter = false
         next()
         scan()
         globals = mutableMapOf<String, Identifier>()
@@ -116,7 +121,7 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
         if(fromAnyToFloat(mem[pc]) == INSTRUCTION_FD.toFloat()){
             pc += 1
             var turtlee = mem[top + 1] as Turtle
-            turtlee.dopredu(pg.pwidth.toFloat() * fromAnyToFloat(mem[top])/100)
+            turtlee.dopredu(pg.pwidth.toFloat() * fromAnyToFloat(mem[top])/1000)
             top += 2
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_MINUS.toFloat()){
             pc += 1
@@ -124,25 +129,25 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_STVOREC.toFloat()){
             pc += 1
             var turtlee = mem[top + 4] as Turtle
-            var x = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+3])/100
-            var y = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+2])/100
-            var v = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+1])/100
+            var x = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+3])/1000
+            var y = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+2])/1000
+            var v = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+1])/1000
             turtlee.stvorec(x,y,v,fromAnyTo(mem[top]).toString())
             top += 5
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_KRUH.toFloat()){
             pc += 1
             var turtlee = mem[top + 4] as Turtle
-            var x = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+3])/100
-            var y = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+2])/100
-            var v = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+1])/100
+            var x = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+3])/1000
+            var y = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+2])/1000
+            var v = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+1])/1000
             turtlee.kruh(x,y,v,fromAnyTo(mem[top]).toString())
             top += 5
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_TROJUHOLNIK.toFloat()){
             pc += 1
             var turtlee = mem[top + 4] as Turtle
-            var x = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+3])/100
-            var y = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+2])/100
-            var v = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+1])/100
+            var x = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+3])/1000
+            var y = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+2])/1000
+            var v = pg.pwidth.toFloat() * fromAnyToFloat(mem[top+1])/1000
             turtlee.trojuholnik(x,y,v,fromAnyTo(mem[top]).toString())
             top += 5
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_ADD.toFloat()){
@@ -239,8 +244,8 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
         else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_SET_POSITION.toFloat()){
             pc += 1
             var turtlee = mem[top + 2] as Turtle
-            turtlee.x =fromAnyToFloat(mem[top +1])
-            turtlee.y =fromAnyToFloat(mem[top])
+            turtlee.x =pg.pwidth.toFloat() * fromAnyToFloat(mem[top+1])/100
+            turtlee.y =pg.pwidth.toFloat() * fromAnyToFloat(mem[top])/100
             top += 3
         }
         else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_SET.toFloat()){
@@ -361,7 +366,7 @@ class Parser(npg: Playground, nprint: MaterialTextView):Syntax() {
                         Turtle(
                             pg,
                             pg.pwidth.toFloat() * 0.5.toFloat(),
-                            pg.height.toFloat() * 0.5.toFloat(),
+                            pg.pheight.toFloat() * 0.5.toFloat(),
                             "black"
                         )
                     )
@@ -1267,7 +1272,7 @@ fun elementsO():MyList{
                 scan()
                 check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
                 result = Greater(result, addsub())
-            }else if(token == "=="){
+            }else if(token == "==" || token == "="){
                 scan()
                 check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
                 result = Equal(result, addsub())
@@ -1347,16 +1352,21 @@ fun elementsO():MyList{
 
     fun scan(){
         pomindex = index
-        while(look == ' ' || look == '\n' || look == '\t' || look == ';'){
+        while(look == ' ' || look == '\n' || look == '\t' || look == ';' || look == 160.toChar()){
             if(look == '\n'){
                 tabcount= 0
+                bolEnter = true
             }
             next()
             while(look == ' ' || look == '\n' || look == ';'){
                 if(look == '\n'){
                     tabcount= 0
+                    bolEnter = true
                 }
                 next()
+            }
+            if(look == 160.toChar() && bolEnter){
+                tabcount += 1
             }
             if(look == '\t'){
                 tabcount += 1
@@ -1365,6 +1375,7 @@ fun elementsO():MyList{
         token = ""
         position = index - 1
         if(look.isDigit()){
+            bolEnter = false
             while(look.isDigit()){
                 token += look
                 next()
@@ -1379,22 +1390,31 @@ fun elementsO():MyList{
             }
             kind = NUMBER
         }else if(look.isLetter()){
-            while(look.isLetter()){
+            bolEnter = false
+
+            while(look.isLetter() || look.isDigit()){
                 token += look
                 next()
             }
             kind = WORD
         }else if(look == '\"'){
+            bolEnter = false
+
             token += look
             next()
-            while(look != '\"'){
+            while(look != '\"' && look != 0.toChar()){
                 token += look
                 next()
+            }
+            if(look == 0.toChar()){
+                throw Exception("String nie je ukončený, očakával som \"?" + index)
             }
             token += look
             next()
             kind = WORD
-        }else if(Array(2){"<";">"}.contains(look.toString())){
+        }else if(look == '<' || look == '>' || look == '='){
+            bolEnter = false
+
             token += look
             next()
             if(look == '='){
@@ -1403,10 +1423,14 @@ fun elementsO():MyList{
             }
             kind = SYMBOL
         }else if(look != 0.toChar()){
+            bolEnter = false
+
             token += look
             next()
             kind = SYMBOL
         }else{
+            bolEnter = false
+
             kind = NOTHING
         }
     }

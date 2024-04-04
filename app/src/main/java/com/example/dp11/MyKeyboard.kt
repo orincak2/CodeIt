@@ -97,6 +97,10 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
             } else {
                 inputConection!!.commitText("", 1)
             }
+            val et: ExtractedText = inputConection!!.getExtractedText(ExtractedTextRequest(), 0)
+            val selectionStart = et.selectionStart
+            ac!!.parseColor()
+            inputConection!!.commitText("", selectionStart+1)
             ac!!.setWords()
         }else if (v!!.getId() == R.id.button_med){
             var value = keyValues.get(v!!.getId())
@@ -107,7 +111,7 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
             val et: ExtractedText = inputConection!!.getExtractedText(ExtractedTextRequest(), 0)
             val selectionStart = et.selectionStart
            // val sData: CharSequence? = inputConection!!.getTextBeforeCursor(0, 0)
-            ac!!.parseColor()
+            ac!!.parseColor(0, true)
             inputConection!!.commitText("", selectionStart+1)
 
             ac!!.setWords()
@@ -117,11 +121,22 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
         else if (v!!.getId() == R.id.button_ent){
             var value = keyValues.get(v!!.getId())
             inputConection!!.commitText(value,1)
+            val et: ExtractedText = inputConection!!.getExtractedText(ExtractedTextRequest(), 0)
+            val selectionStart = et.selectionStart
+            ac!!.parseColor()
+            inputConection!!.commitText("", selectionStart+1)
             ac!!.setWords()
             ac!!.addline()
         }else{
             var value = keyValues.get(v!!.getId())
             inputConection!!.commitText(value,1)
+            val et: ExtractedText = inputConection!!.getExtractedText(ExtractedTextRequest(), 0)
+            val selectionStart = et.selectionStart
+            if(v!!.getId() == R.id.button_dvojbodka || v!!.getId() == R.id.button_rovna || v!!.getId() == R.id.button_lavaK)
+                ac!!.parseColor(0,true)
+            else
+                ac!!.parseColor()
+            inputConection!!.commitText("", selectionStart+1)
             ac!!.setWords()
 
         }

@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.CountDownLatch
 
 class Playground(internal var context: Context, attrs: AttributeSet)
     : View(context, attrs),
@@ -17,6 +18,7 @@ class Playground(internal var context: Context, attrs: AttributeSet)
     var ciara = emptyList<Float>().toMutableList()
     var ciary = emptyList<Ciara>().toMutableList()
     var cc = Color.RED
+    private var latch: CountDownLatch? = null
     init { // inicializacia
         setBackgroundColor(Color.GRAY)
     }
@@ -27,13 +29,15 @@ class Playground(internal var context: Context, attrs: AttributeSet)
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        pwidth = widthMeasureSpec
-        pheight = heightMeasureSpec
+        //pwidth = widthMeasureSpec
+        //pheight = heightMeasureSpec
     }
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        pwidth = w
-        pheight = h
+        if(pwidth == 0) {
+            pwidth = w
+            pheight = h
+        }
     }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -57,5 +61,18 @@ class Playground(internal var context: Context, attrs: AttributeSet)
         }
         invalidate()
         return true
+    }
+    fun waitForInvalidate() {
+        this.invalidate()
+        latch = CountDownLatch(1)
+
+        // Pridáme poslucháča na sledovanie dokončenia invalidácie
+        viewTreeObserver.addOnDrawListener {
+            latch?.countDown() // Označíme, že invalidácia je dokončená
+            latch = null // Uvoľníme zámok
+        }
+
+        // Čakáme, kým invalidate() nie je dokončené
+        latch?.await()
     }
 }

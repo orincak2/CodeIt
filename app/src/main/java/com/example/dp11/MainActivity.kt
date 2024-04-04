@@ -166,49 +166,14 @@ class MainActivity : AppCompatActivity() {
                 TerminalLayout!!.setVisibility(View.INVISIBLE)
                 keyboardMain!!.setVisibility(View.VISIBLE)
             }else{
-                if(vypisl!!.visibility == View.VISIBLE) {
-                    val param = LinearLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        0,
-                        50.0f
-                    )
-                    val param2 = LinearLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        0,
-                        16.0f
-                    )
-                    openCloseTerminal!!.setImageResource(com.google.android.material.R.drawable.mtrl_ic_arrow_drop_down)
-                    vypisl!!.setLayoutParams(param2)
-                    spodok!!.setLayoutParams(param)
-                    vypisl!!.setVisibility(View.VISIBLE)
-                }else{
-                    val param = LinearLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        0,
-                        4.0f
-                    )
-                    val param2 = LinearLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        0,
-                        0.0f
-                    )
-
-                    openCloseTerminal!!.setImageResource(com.google.android.material.R.drawable.mtrl_ic_arrow_drop_up)
-                    vypisl!!.setLayoutParams(param2)
-                    spodok!!.setLayoutParams(param)
-                    vypisl!!.setVisibility(View.INVISIBLE)
-                }
-
-
-
-
-                TerminalLayout!!.setVisibility(View.VISIBLE)
-                keyboardMain!!.setVisibility(View.INVISIBLE)
+                zavriklavesnicu()
             }
         }
 
+
+
         but1!!.setOnClickListener {
-           txt!!.setText("a = turtle(300,300, \"modra\")" +
+          /* txt!!.setText("a = turtle(300,300, \"modra\")" +
                    "\nd = 1" +
                    "\n far = [\"modra\",\"cervena\",\"zlta\",\"oranzova\",\"zelena\"]" +
                    "\n vyber = 3" +
@@ -225,7 +190,7 @@ class MainActivity : AppCompatActivity() {
                    "\tkrok(a, d) \n" +
                    "\ttoc(a, 65) \n" +
                    "\tzmenfarbu(a) \n" +
-                   "\td = d + 10")
+                   "\td = d + 10")*/
 
 
 
@@ -234,21 +199,21 @@ class MainActivity : AppCompatActivity() {
                     "definuj toc(){a.vpravo 70 b.vpravo 70}\n" +
                    "definuj zvec(h) {vrat d + h}\n" +
                     "kym d < 150 {krok(a, b) toc() d = zvec(7)}")*/
-            //wordHelpButttonClicked(but1)
+            wordHelpButttonClicked(but1)
         }
         but2!!.setOnClickListener {
-            txt!!.setText("a = turtle(300,300, \"modra\")" +
+           /* txt!!.setText("a = turtle(300,300, \"modra\")" +
                     "\nd = 1" +
                     "\n far = [\"modra\",\"cervena\",\"zlta\",\"oranzova\",\"zelena\"]" +
                     "\n vyber = 0" +
                     "\ndefinuj krok(kor, dlzka){dopredu(dlzka)}\n" +
                     "definuj toc(kor, uhol){vpravo(uhol)}\n" +
                     "definuj zmenfarbu(kor){farba(far[vyber]) vyber = vyber + 1 if(vyber > 4){vyber = 0}}\n" +
-                    "kym(d < 25) {krok(a, d) toc(a, 70) zmenfarbu(a) d = d + 1}")
-            //wordHelpButttonClicked(but2)
+                    "kym(d < 25) {krok(a, d) toc(a, 70) zmenfarbu(a) d = d + 1}")*/
+            wordHelpButttonClicked(but2)
         }
         but3!!.setOnClickListener {
-            txt!!.setText("a = turtle(300,300, \"modra\")" +
+           /* txt!!.setText("a = turtle(300,300, \"modra\")" +
                     "\nd = 1" +
                     "\n far = [\"modra\",\"cervena\",\"zlta\",\"oranzova\",\"zelena\"]" +
                     "\n vyber = 2" +
@@ -265,11 +230,11 @@ class MainActivity : AppCompatActivity() {
                     "\tkrok(a, d) \n" +
                     "\ttoc(a, 75) \n" +
                     "\tzmenfarbu(a) \n" +
-                    "\td = d + 10\n}")
-           // wordHelpButttonClicked(but3)
+                    "\td = d + 10\n}")*/
+            wordHelpButttonClicked(but3)
         }
         but4!!.setOnClickListener {
-            txt!!.setText("pole = [1, 2, 3, 4]" +
+            /*txt!!.setText("pole = [1, 2, 3, 4]" +
                     "\npole.add(6)" +
                     "\nres = 0" +
                     "\nfor i in 0..5:" +
@@ -298,28 +263,108 @@ class MainActivity : AppCompatActivity() {
                     "" +
                     "\n" +
                     "\nfor y in pole:" +
-                    "\n\tvypis(y)")
-          //  wordHelpButttonClicked(but4)
+                    "\n\tvypis(y)")*/
+            wordHelpButttonClicked(but4)
         }
         but5!!.setOnClickListener {
-            txt!!.setText("a = true" +
-                    "\n definuj krok(b):" +
-                    "" +
-                    "\n\tak (a):" +
-                    "" +
-                    "\n\t\tvypis 100" +
-                    "" +
-                    "\n\tinak:" +
-                    "" +
-                    "\n\t\tvypis 200" +
-                    "\n\treturn b" +
-                    "" +
-                    "\n krok(4)")
+            if(txt!!.text.toString() == "1"){
+                txt!!.setText("a = turtle(300,300, \"modra\")" +
+                        "\nd = 1" +
+                        "\nfar = [\"modra\",\"cervena\",\"zlta\",\"oranzova\",\"zelena\"]" +
+                        "\nvyber = 3" +
+                        "\n" +
+                        "\ndefinuj krok(kor, dlzka):\n\tkor.dopredu(dlzka)\n" +
+                        "\ndefinuj toc(kor, uhol):\n\tkor.vpravo(uhol)\n" +
+                        "\ndefinuj zmenfarbu(kor):\n" +
+                        "\tkor.farba(far[vyber]) \n" +
+                        "\tvyber = vyber + 1 \n" +
+                        "\tif(vyber > 4):\n" +
+                        "\t\tvyber = 0\n" +
+                        "\n" +
+                        "kym(d < 150):\n" +
+                        "\tkrok(a, d) \n" +
+                        "\ttoc(a, 65) \n" +
+                        "\tzmenfarbu(a) \n" +
+                        "\td = d + 5")
+            }
+            if(txt!!.text.toString() == "2"){
+                txt!!.setText("a = turtle(300,300, \"modra\")" +
+                        "\nd = 1" +
+                        "\n far = [\"modra\",\"cervena\",\"zlta\",\"oranzova\",\"zelena\"]" +
+                        "\n vyber = 0" +
+                        "\ndefinuj krok(kor, dlzka){dopredu(dlzka)}\n" +
+                        "definuj toc(kor, uhol){vpravo(uhol)}\n" +
+                        "definuj zmenfarbu(kor){farba(far[vyber]) vyber = vyber + 1 if(vyber > 4){vyber = 0}}\n" +
+                        "kym(d < 125) {krok(a, d) toc(a, 70) zmenfarbu(a) d = d + 5}")
+            }
+            if(txt!!.text.toString() == "3"){
+                txt!!.setText("a = turtle(300,300, \"modra\")" +
+                        "\nd = 1" +
+                        "\n far = [\"modra\",\"cervena\",\"zlta\",\"oranzova\",\"zelena\"]" +
+                        "\n vyber = 2" +
+                        "\n" +
+                        "\ndefinuj krok(kor, dlzka)\n{\n\tkor.dopredu(dlzka)\n}\n" +
+                        "\ndefinuj toc(kor, uhol)\n{\n\tkor.vpravo(uhol)\n}\n" +
+                        "\ndefinuj zmenfarbu(kor)\n{\n" +
+                        "\tkor.farba(far[vyber]) \n" +
+                        "\tvyber = vyber + 1 \n" +
+                        "\tif(vyber > 4)\n" +
+                        "\t{\n\t\tvyber = 0\n\t}\n" +
+                        "}\n\n" +
+                        "kym(d < 150) \n{\n" +
+                        "\tkrok(a, d) \n" +
+                        "\ttoc(a, 75) \n" +
+                        "\tzmenfarbu(a) \n" +
+                        "\td = d + 5\n}")
+            }
+            if(txt!!.text.toString() == "4"){
+                txt!!.setText("pole = [1, 2, 3, 4]" +
+                        "\npole.add(6)" +
+                        "\nres = 0" +
+                        "\nfor i in 0..5:" +
+                        "\n\tres = res + pole[i]" +
+                        "\nvypis(\"1.sucet pola je: \" + res)" +
+                        "" +
+                        "\n" +
+                        "\nres = 0" +
+                        "\nfor j = 0; j < 5:" +
+                        "\n\tres = res + pole[j]" +
+                        "\nvypis(\"2.sucet pola je: \" + res)" +
+                        "" +
+                        "\n" +
+                        "\nres = 0" +
+                        "\nfor x in pole:" +
+                        "\n\tres = res + x" +
+                        "\nvypis(\"3.sucet pola je: \" + res)"+
+                        "" +
+                        "\n" +
+                        "\nres = 0" +
+                        "\npom = 0" +
+                        "\nopakuj 5:" +
+                        "\n\tres = res + pole[pom]" +
+                        "\n\tpom = pom + 1" +
+                        "\nvypis(\"4.sucet pola je: \" + res)"+
+                        "" +
+                        "\n" +
+                        "\nfor y in pole:" +
+                        "\n\tvypis(y)")
+            }
+            if(txt!!.text.toString() == "5"){
+                txt!!.setText("def sucet(hodnotaA, hodnotaB):" +
+                        "\n\tvrat hodnotaA + hodnotaB" +
+                        "\nd = 1")
+            }
+            if(txt!!.text.toString() == "6"){
+                txt!!.setText("stvorec(500,200,100,\"red\")" +
+                        "\ntrojuholnik(500,100,100,\"blue\")")
+            }
+
 
             //wordHelpButttonClicked(but5)
         }
         print!!.setMovementMethod(ScrollingMovementMethod())
         runButton!!.setOnClickListener {
+            zavriklavesnicu()
             try {
                 parser!!.run(txt!!)
             } catch (e: Exception) {
@@ -336,8 +381,8 @@ class MainActivity : AppCompatActivity() {
         return "<font color=$color>$text</font>"
     }
     
-    fun parseColor(ind: Int = 0){
-        th!!.setColors(ind)
+    fun parseColor(ind: Int = 0, boolean: Boolean = false){
+        th!!.setColors(ind, boolean)
     }
     fun setWords(){
         th!!.setWords()
@@ -358,6 +403,47 @@ class MainActivity : AppCompatActivity() {
         )
         txt2!!.setText(spannableString)*/
 
+    }
+
+    fun zavriklavesnicu(){
+        if(vypisl!!.visibility == View.VISIBLE) {
+            val param = LinearLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                0,
+                50.0f
+            )
+            val param2 = LinearLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                0,
+                16.0f
+            )
+            openCloseTerminal!!.setImageResource(com.google.android.material.R.drawable.mtrl_ic_arrow_drop_down)
+            vypisl!!.setLayoutParams(param2)
+            spodok!!.setLayoutParams(param)
+            vypisl!!.setVisibility(View.VISIBLE)
+        }else{
+            val param = LinearLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                0,
+                4.0f
+            )
+            val param2 = LinearLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                0,
+                0.0f
+            )
+
+            openCloseTerminal!!.setImageResource(com.google.android.material.R.drawable.mtrl_ic_arrow_drop_up)
+            vypisl!!.setLayoutParams(param2)
+            spodok!!.setLayoutParams(param)
+            vypisl!!.setVisibility(View.INVISIBLE)
+        }
+
+
+
+
+        TerminalLayout!!.setVisibility(View.VISIBLE)
+        keyboardMain!!.setVisibility(View.INVISIBLE)
     }
 
     fun init(){
@@ -381,7 +467,9 @@ class MainActivity : AppCompatActivity() {
         wordsHelper.add(WordHelper("print", 6,1))
         wordsHelper.add(WordHelper("vypis", 6,1))
         wordsHelper.add(WordHelper("inak", 7,1))
+        wordsHelper.add(WordHelper("else", 7,1))
         wordsHelper.add(WordHelper("turtle", 8,1))
+        wordsHelper.add(WordHelper("korytnacka", 8,1))
         wordsHelper.add(WordHelper("while", 9,1))
         wordsHelper.add(WordHelper("kym", 9,1))
         wordsHelper.add(WordHelper("return", 10,1))
@@ -389,6 +477,11 @@ class MainActivity : AppCompatActivity() {
         wordsHelper.add(WordHelper("dopredu", 13,1))
         wordsHelper.add(WordHelper("vpravo", 14,1))
         wordsHelper.add(WordHelper("vlavo", 15,1))
+        wordsHelper.add(WordHelper("stvorec", 16,1))
+        wordsHelper.add(WordHelper("trojuholnik", 17,1))
+        wordsHelper.add(WordHelper("kruh", 18,1))
+        wordsHelper.add(WordHelper("farba", 18,1))
+        wordsHelper.add(WordHelper("pozicia", 18,1))
         th = TextHelper(txt, but1, but2, but3, but4, but5, wordsHelper)
 
         if (Build.VERSION.SDK_INT >= 21) {
@@ -413,7 +506,7 @@ class MainActivity : AppCompatActivity() {
             txt4!!.setRawInputType(InputType.TYPE_NULL)
             txt4!!.isFocusable = false
         }
-        parser = Parser(pg!!,print!!)
+        parser = Parser(pg!!,print!!,th!!)
         runButton = findViewById(R.id.imageView44)
         openCloseTerminal = findViewById(R.id.imageView6)
 
@@ -436,11 +529,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun wordHelpButttonClicked(button: Button?){
-        var lstWords = txt!!.text.toString().split(" ")
-        var sLastWordpom = lstWords[lstWords.size-1].split("\n")
+        var lstWords = txt!!.text.toString().trim().split(" ", "&nbsp;", "(",",","\\t")
+        var pppp = lstWords[lstWords.lastIndex].split("&nbsp;")
+        var pppr = pppp[pppp.lastIndex].split(160.toChar())
+        var sLastWordpom = pppr[pppr.size-1].split("\n")
         var sLastWordpom2 = sLastWordpom[sLastWordpom.size-1].split(".")
         var sLastWord = sLastWordpom2[sLastWordpom2.size-1].replace("[","").replace("]","").replace("=","").replace(">","").replace("<","")
-        txt!!.setText(txt!!.text.toString() + (button!!.text).removePrefix(sLastWord))
+        txt!!.setText(txt!!.text.toString().trim() + (button!!.text).removePrefix(sLastWord))
         txt!!.setSelection(txt!!.length())
         parseColor()
         setWords()

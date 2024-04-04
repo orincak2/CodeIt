@@ -40,23 +40,24 @@ class Turtle(pg: Playground, xx: Float = 0F, yy:Float = 0F, colorn: String = "re
         if(playground.visibility == View.INVISIBLE){
             playground.setVisibility(View.VISIBLE)
         }
-        if(uhol + u < 360) {
-            uhol += u
+        if(uhol - u > 0) {
+            uhol -= u
         }
         else{
-            uhol = uhol + u -360
+            uhol = (uhol - u) + 360
         }
+
        // playground.invalidate()
     }
     fun vpravo(u : Float){
         if(playground.visibility == View.INVISIBLE){
             playground.setVisibility(View.VISIBLE)
         }
-        if(uhol - u > 0) {
-            uhol -= u
+        if(uhol + u < 360) {
+            uhol += u
         }
         else{
-            uhol = (uhol - u) + 360
+            uhol = uhol + u -360
         }
         //playground.invalidate()
     }
@@ -67,12 +68,12 @@ class Turtle(pg: Playground, xx: Float = 0F, yy:Float = 0F, colorn: String = "re
         var px = x
         var py = y
         uhol = 0F
-        x = xx-(velkost/2)
-        y = yy+(velkost/2)
+        x = xx//-(velkost/2)
+        y = yy//+(velkost/2)
         farba(farva)
         for (x in 1..4){
             dopredu(velkost)
-            vpravo(90F)
+            vlavo(90F)
         }
         x = px
         y = py
@@ -85,12 +86,12 @@ class Turtle(pg: Playground, xx: Float = 0F, yy:Float = 0F, colorn: String = "re
         var px = x
         var py = y
         uhol = 0F
-        x = xx-(velkost/2)
-        y = yy+((velkost * sqrt(3.0)) / 4).toFloat()
+        x = xx//-(velkost/2)
+        y = yy//+((velkost * sqrt(3.0)) / 4).toFloat()
         farba(farva)
         for (x in 1..3){
             dopredu(velkost)
-            vpravo(120F)
+            vlavo(120F)
         }
         x = px
         y = py
@@ -104,7 +105,7 @@ class Turtle(pg: Playground, xx: Float = 0F, yy:Float = 0F, colorn: String = "re
         var px = x
         var py = y
         x = xx+(velkost)
-        y = yy
+        y = yy-(velkost)
         uhol = 0F
         vpravo(90F)
         farba(farva)
@@ -117,7 +118,6 @@ class Turtle(pg: Playground, xx: Float = 0F, yy:Float = 0F, colorn: String = "re
         y = py
         color = pfarva
         uhol = puhol
-        vlavo(90F)
     }
 
     fun farba(far: String){
@@ -153,5 +153,7 @@ class Turtle(pg: Playground, xx: Float = 0F, yy:Float = 0F, colorn: String = "re
         uhol = 0.toFloat()
         playground.cc = color
         playground.invalidate()
+        //playground.waitForInvalidate()
     }
+
 }
