@@ -1,8 +1,6 @@
 package Parser
 
-import com.example.dp11.Turtle
-import kotlin.collections.List
-
+import com.rel.codeit.Turtle
 
 
 open class Syntax(){

@@ -1,4 +1,4 @@
-package com.example.dp11
+package com.rel.codeit
 
 import org.junit.Test
 

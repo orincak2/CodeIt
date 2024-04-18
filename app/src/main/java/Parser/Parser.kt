@@ -9,12 +9,10 @@ import Turtle.Position
 import Turtle.Rt
 import Turtle.Stvorec
 import Turtle.Trojuholnik
-import android.graphics.Color
-import android.view.View
 import android.widget.TextView
-import com.example.dp11.Playground
-import com.example.dp11.TextHelper
-import com.example.dp11.Turtle
+import com.rel.codeit.Playground
+import com.rel.codeit.TextHelper
+import com.rel.codeit.Turtle
 import com.google.android.material.textview.MaterialTextView
 
 
@@ -36,15 +34,32 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
         operator fun plus(inyObjekt: MojaTrieda): Any {
             if(this.hodnota is Float){
                 if(inyObjekt.hodnota is Float){
-                    return (this.hodnota as Float) + (inyObjekt.hodnota as Float)
+                    return (this.hodnota as Float).toFloat() + (inyObjekt.hodnota as Float).toFloat()
+                }
+                if(inyObjekt.hodnota is Int){
+                    return (this.hodnota as Float).toFloat() + (inyObjekt.hodnota as Int).toInt()
                 }
                 if(inyObjekt.hodnota is String){
                     return (this.hodnota as Float).toString() + (inyObjekt.hodnota as String)
                 }
             }
+            if(this.hodnota is Int){
+                if(inyObjekt.hodnota is Float){
+                    return (this.hodnota as Int).toInt() + (inyObjekt.hodnota as Float).toFloat()
+                }
+                if(inyObjekt.hodnota is Int){
+                    return (this.hodnota as Int).toInt() + (inyObjekt.hodnota as Int).toInt()
+                }
+                if(inyObjekt.hodnota is String){
+                    return (this.hodnota as Int).toString() + (inyObjekt.hodnota as String)
+                }
+            }
             if(this.hodnota is String){
                 if(inyObjekt.hodnota is Float){
                     return (this.hodnota as String) + (inyObjekt.hodnota as Float).toString()
+                }
+                if(inyObjekt.hodnota is  Int){
+                    return (this.hodnota as String) + (inyObjekt.hodnota as Int).toString()
                 }
                 if(inyObjekt.hodnota is String){
                     return (this.hodnota as String) + (inyObjekt.hodnota as String)
@@ -52,11 +67,82 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
             }
             return 99999998
         }
+
+        operator fun times(inyObjekt: MojaTrieda): Any {
+            if(this.hodnota is Float){
+                if(inyObjekt.hodnota is Float){
+                    return (this.hodnota as Float).toFloat() * (inyObjekt.hodnota as Float).toFloat()
+                }
+                if(inyObjekt.hodnota is Int){
+                    return (this.hodnota as Float).toFloat() * (inyObjekt.hodnota as Int).toInt()
+                }
+                if(inyObjekt.hodnota is String){
+                    val opakujuciSaRetazec = (inyObjekt.hodnota as String).toString().repeat((this.hodnota as Float).toInt())
+                    return opakujuciSaRetazec
+                }
+            }
+
+            if(this.hodnota is Int){
+                if(inyObjekt.hodnota is Float){
+                    return (this.hodnota as Int).toInt() * (inyObjekt.hodnota as Float).toFloat()
+                }
+                if(inyObjekt.hodnota is Int){
+                    return (this.hodnota as Int).toInt() * (inyObjekt.hodnota as Int).toInt()
+                }
+                if(inyObjekt.hodnota is String){
+                    val opakujuciSaRetazec = (inyObjekt.hodnota as String).toString().repeat((this.hodnota as Int).toInt())
+                    return opakujuciSaRetazec
+                }
+            }
+            if(this.hodnota is String){
+                if(inyObjekt.hodnota is Float){
+                    val opakujuciSaRetazec = (this.hodnota as String).toString().repeat((inyObjekt.hodnota as Float).toInt())
+                    return opakujuciSaRetazec
+                }
+                if(inyObjekt.hodnota is Int){
+                    val opakujuciSaRetazec = (this.hodnota as String).toString().repeat((inyObjekt.hodnota as Int).toInt())
+                    return opakujuciSaRetazec
+                }
+
+            }
+            return 99999998
+        }
+
+        fun equals(inyObjekt: MojaTrieda): Boolean {
+            if(this.hodnota is Float){
+                if(inyObjekt.hodnota is Float){
+                    return (this.hodnota as Float).toFloat() != (inyObjekt.hodnota as Float).toFloat()
+                }
+            }
+            if(this.hodnota is MutableList<*>){
+                if(inyObjekt.hodnota is MutableList<*>){
+                    return (this.hodnota as MutableList<*>) != (inyObjekt.hodnota as MutableList<*>)
+                }
+            }
+            if(this.hodnota is Array<*>){
+                if(inyObjekt.hodnota is Array<*>){
+                    return (this.hodnota as Array<*>) != (inyObjekt.hodnota as Array<*>)
+                }
+            }
+            if(this.hodnota is Int){
+                if(inyObjekt.hodnota is Int){
+                    return (this.hodnota as Int).toInt() != (inyObjekt.hodnota as Int).toInt()
+                }
+            }
+            if(this.hodnota is String){
+                if(inyObjekt.hodnota is String){
+                    return (this.hodnota as String).toString() != (inyObjekt.hodnota as String).toString()
+                }
+
+            }
+            return false
+        }
     }
 
     fun run(txt:TextView){
         turtle.reset()
         reset()
+        var leeeen = "def len(x){}"
         input = txt!!.text.toString().trim()
         //input.replace("   ", "\t")
         tabindex = 0
@@ -75,8 +161,8 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
         var program = parse(0)
         //check(NOTHING)
         counter_adr = 500
-        mem = mutableListOf<Any>(1000)
-        mem.addAll(List(1000) { Any() })
+        mem = MutableList(1000) { Any() }
+        //mem.addAll(List(1000) { Any() })
         adr = 0
         poke(INSTRUCTION_JUMP)
         poke(globalvaradr)
@@ -97,6 +183,15 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
 
         return 99999999.toFloat()
     }
+
+    fun len(obj: Any): Int {
+        return when (obj) {
+            is String -> obj.length
+            is Array<*> -> obj.size
+            is Collection<*> -> obj.size
+            else -> throw IllegalArgumentException("Unsupported type")
+        }
+    }
     fun fromAnyToInt(anyFloatValue: Any):Int{
         if(anyFloatValue is Int){
             return anyFloatValue.toInt()
@@ -105,6 +200,9 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
     }
     fun fromAnyTo(anyFloatValue: Any):Any{
         if(anyFloatValue is String){
+            return anyFloatValue.toString()
+        }
+        if(anyFloatValue is Char){
             return anyFloatValue.toString()
         }
         if(anyFloatValue is Float){
@@ -160,7 +258,7 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
             top = top + 1
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_MUL.toFloat()){
             pc += 1
-            mem[top + 1] = fromAnyToFloat(mem[top + 1]) * fromAnyToFloat(mem[top])
+            mem[top + 1] = MojaTrieda(fromAnyTo(mem[top + 1])) * MojaTrieda(fromAnyTo(mem[top]))
             top = top + 1
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_NOT.toFloat()){
             pc += 1
@@ -187,12 +285,12 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
             var pom1 = mem[top + 1]
             var pom2 = mem[top]
             if(!(pom1 is Number)){
-               pom1 = ((mem[top + 1] as MutableList<Syntax>).count()).toFloat()
+               pom1 = len(mem[top + 1]).toFloat()
             }else{
                 pom1 = fromAnyToFloat(mem[top + 1])
             }
             if(!(pom2 is Number)){
-                pom2 = ((mem[top] as MutableList<Syntax>).count()).toFloat()
+                pom2 = len(mem[top]).toFloat()
             }else{
                 pom2 = fromAnyToFloat(mem[top])
             }
@@ -201,6 +299,10 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
         } else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_GREATER.toFloat()){
             pc += 1
             mem[top + 1] = (fromAnyToFloat(mem[top + 1]) > fromAnyToFloat(mem[top])).toFloat()
+            top = top + 1
+        }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_NOTEQUAL.toFloat()){
+            pc += 1
+            mem[top + 1] = (MojaTrieda(mem[top + 1]).equals(MojaTrieda(mem[top]))).toFloat()
             top = top + 1
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_CHOSE.toFloat()){
             //pc += 1
@@ -219,9 +321,13 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
             pc += 1
             mem[top + 1] = (fromAnyToFloat(mem[top + 1]) >= fromAnyToFloat(mem[top])).toFloat()
             top = top + 1
+        } else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_IN.toFloat()){
+            pc += 1
+            mem[top + 1] = (mem[top + 1].toString() in mem[top].toString()).toFloat()
+            top = top + 1
         } else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_EQUAL.toFloat()){
             pc += 1
-            mem[top + 1] = (mem[top + 1] == mem[top]).toFloat()
+            mem[top + 1] = (mem[top + 1].toString() == mem[top].toString()).toFloat()
             top = top + 1
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_LT.toFloat()){
             pc += 1
@@ -234,6 +340,10 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
             var turtlee = mem[top + 1] as Turtle
             turtlee.vpravo(fromAnyToFloat(mem[top]))
             top += 2
+        }
+        else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_LEN.toFloat()){
+            pc += 1
+            mem[top] = len((mem[top]))
         }
         else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_SET_COLOR.toFloat()){
             pc += 1
@@ -338,11 +448,21 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
             top = top + 1
             pc += 1
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_GET_ELEMENT.toFloat()){
-            pc += 1
-            var element = (mem[top+1] as MutableList<Syntax>)[fromAnyToFloat(mem[top]).toInt()]
-            top += 2
-            adr = pc
-            (element as Syntax).generate()
+            if(mem[top+1] is String) {
+                pc += 1
+                var element = (mem[top + 1] as String)[fromAnyToFloat(mem[top]).toInt()]
+                mem[top+1] = element
+                top += 1
+                pc +=2
+            }
+            else{
+                pc += 1
+                var element =
+                    (mem[top + 1] as MutableList<Syntax>)[fromAnyToFloat(mem[top]).toInt()]
+                top += 2
+                adr = pc
+                (element as Syntax).generate()
+            }
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_ADD_ELEMENT.toFloat()){
             pc += 1
             (mem[top] as MutableList<Syntax>).add(mem[pc] as Syntax)
@@ -508,7 +628,7 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
                     globalvaradr += 1
                     test = Less(pomL, rangeEnd)
                 }else{
-                    if(prve is MyList) {
+                    if(prve is MyList || prve is Strings) {
                         var pomL3 = GlobalVariable(name+"FL", globalvaradr.toFloat())
                         pom3 = Assign(pomL3, prve)
                         globals[name+"FL"] = pomL3
@@ -524,7 +644,8 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
                         globals[name] = pomL2
                         globalvaradr += 1
                         test = Less(pomL, pomL3)
-                    }else {
+                    }
+                    else {
                         var pomL = GlobalVariable(name+"FL", globalvaradr.toFloat())
                         pom = Assign(pomL, Const((0).toFloat()))
                         globals[name+"FL"] = pomL
@@ -909,6 +1030,17 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
                             }
                             result.add(Call(subr, agrs))
                         }
+                    }else if(name == "len"){
+                        if (token == "(") {
+                            scan()
+                            var agrs = expr()
+                            check(arrayOf(SYMBOL), arrayOf(")"))
+                            scan()
+                            result.add(Len(agrs))
+                        }else{
+                            result.add(Len(expr()))
+                        }
+
                     }
                     else if (name in locals){
                         if (token == ".") {
@@ -994,6 +1126,7 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
                 else{
                     scan()
                     var pom = Syntax()
+
                     if(locals.count() > 0){
                         if(name in globals){
                             if(token == "["){
@@ -1182,6 +1315,17 @@ fun elementsO():MyList{
                     }else{
                         result = globals[token]!!
                     }
+                }else if(token == "len"){
+                    scan()
+                    if (token == "(") {
+                        scan()
+                        var agrs = expr()
+                        check(arrayOf(SYMBOL), arrayOf(")"))
+                        result = Len(agrs)
+                    }else{
+                        result = Len(expr())
+                    }
+
                 }else{
                     throw Exception("Neznáma premenna" + "?" + index)
                 }
@@ -1280,10 +1424,17 @@ fun elementsO():MyList{
                 scan()
                 check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
                 result = LessEqual(result, addsub())
+            }else if(token == "!="){
+                scan()
+                result = NotEqual(result, addsub())
             }else if(token == ">="){
                 scan()
                 check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
                 result = GreaterEqual(result, addsub())
+            }else if(token == "in"){
+                scan()
+                //check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
+                result = In(result, addsub())
             }else{
                 return result
             }
@@ -1412,7 +1563,7 @@ fun elementsO():MyList{
             token += look
             next()
             kind = WORD
-        }else if(look == '<' || look == '>' || look == '='){
+        }else if(look == '<' || look == '>' || look == '=' || look == '!'){
             bolEnter = false
 
             token += look

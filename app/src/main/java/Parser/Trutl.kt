@@ -1,8 +1,8 @@
 package Parser
 
-import com.example.dp11.Turtle
+import com.rel.codeit.Turtle
 
-class Trutl(nturtle:Turtle):Syntax() {
+class Trutl(nturtle: Turtle):Syntax() {
     var turtle = nturtle
 
     override fun generate() {

@@ -1,4 +1,4 @@
-package com.example.dp11
+package com.rel.codeit
 
 class WordHelper(val sText: String, val iMainPrio: Int, val iSecPrio: Int, val isSUb :Boolean = false) : Comparable<WordHelper> {
 

@@ -1,10 +1,8 @@
-package com.example.dp11
+package com.rel.codeit
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
-import kotlin.random.Random
 
 class Ciara(context : Context, val npole : MutableList<Float>, val nColor : Int) {
     var pole = npole

@@ -1,20 +1,14 @@
-package com.example.dp11
+package com.rel.codeit
 
 
 import Parser.Parser
-import Parser.mem
-import Parser.top
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.InputType
-import android.text.Spannable
-import android.text.SpannableString
 import android.text.method.ScrollingMovementMethod
-import android.text.style.AbsoluteSizeSpan
-import android.text.style.RelativeSizeSpan
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -309,7 +303,7 @@ class MainActivity : AppCompatActivity() {
                         "\tkor.farba(far[vyber]) \n" +
                         "\tvyber = vyber + 1 \n" +
                         "\tif(vyber > 4)\n" +
-                        "\t{\n\t\tvyber = 0\n\t}\n" +
+                                "\t{\n\t\tvyber = 0\n\t}\n" +
                         "}\n\n" +
                         "kym(d < 150) \n{\n" +
                         "\tkrok(a, d) \n" +
@@ -357,6 +351,26 @@ class MainActivity : AppCompatActivity() {
             if(txt!!.text.toString() == "6"){
                 txt!!.setText("stvorec(500,200,100,\"red\")" +
                         "\ntrojuholnik(500,100,100,\"blue\")")
+            }
+            if(txt!!.text.toString() == "7"){
+                txt!!.setText("hslovo=\"kolki\"" +
+                        "\npole=[\"o\",\"p\",\"k\",\"l\",\"i\"]" +
+                        "\ntslovo = len(hslovo)*\"_\"" +
+                        "\npom=0" +
+                        "\nwhile tslovo != hslovo:" +
+                        "\n\tznak=pole[pom]" +
+                        "\n\tif znak in hslovo:" +
+                        "\n\t\tnove=\"\"" +
+                        "\n\t\tfor i in hslovo:" +
+                        "\n\t\t\tif(i==znak or i in tslovo):" +
+                        "\n\t\t\t\tnove=nove+i" +
+                        "\n\t\t\telse:" +
+                        "\n\t\t\t\tnove=nove+\"_\"" +
+                        "\n\t\ttslovo=nove" +
+                        "\n\tprint(tslovo)" +
+                        "\n\tpom=pom+1" +
+                        "\n\tif pom > 4:" +
+                        "\n\t\ttslovo=hslovo")
             }
 
 

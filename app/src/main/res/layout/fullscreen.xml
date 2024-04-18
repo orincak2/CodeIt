@@ -29,7 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.example.dp11.MyKeyboard
+    <com.rel.codeit.MyKeyboard
         android:id="@+id/keyboard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -42,6 +42,6 @@
         app:layout_constraintVertical_bias="1.0"
         tools:layout_constrainedHeight="true">
 
-    </com.example.dp11.MyKeyboard>
+    </com.rel.codeit.MyKeyboard>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

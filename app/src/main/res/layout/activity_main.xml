@@ -61,7 +61,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="40">
 
-                <com.example.dp11.MyKeyboard
+                <com.rel.codeit.MyKeyboard
                     android:id="@+id/keyboard2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     tools:layout_constrainedHeight="true">
 
-                </com.example.dp11.MyKeyboard>
+                </com.rel.codeit.MyKeyboard>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
@@ -335,7 +335,7 @@
                                         </LinearLayout>
                                     </ScrollView>
 
-                                    <com.example.dp11.Playground
+                                    <com.rel.codeit.Playground
                                         android:id="@+id/playground"
                                         android:layout_width="match_parent"
                                         android:layout_height="0dp"
@@ -423,7 +423,7 @@
 
                                     </LinearLayout>
 
-                                    <com.example.dp11.MyKeyboard
+                                    <com.rel.codeit.MyKeyboard
                                         android:id="@+id/keyboard"
                                         android:layout_width="0dp"
                                         android:layout_height="0dp"
@@ -435,7 +435,7 @@
                                         app:layout_constraintTop_toTopOf="parent"
                                         tools:layout_constrainedHeight="true">
 
-                                    </com.example.dp11.MyKeyboard>
+                                    </com.rel.codeit.MyKeyboard>
 
                                 </androidx.constraintlayout.widget.ConstraintLayout>
 

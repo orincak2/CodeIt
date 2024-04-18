@@ -1,4 +1,4 @@
-package com.example.dp11
+package com.rel.codeit
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

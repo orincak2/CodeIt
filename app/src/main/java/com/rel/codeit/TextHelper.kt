@@ -1,14 +1,10 @@
-package com.example.dp11
+package com.rel.codeit
 
 import android.graphics.Color
 import android.text.Html
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import java.io.IOException
-import java.util.Collections.list
-import java.util.Dictionary
-import java.util.PriorityQueue
 
 class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button?,but4 : Button?,but5 : Button?, nwordHelper: MutableList<WordHelper>) {
     var but11 = but1

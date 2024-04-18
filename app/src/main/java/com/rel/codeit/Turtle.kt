@@ -1,8 +1,7 @@
-package com.example.dp11
+package com.rel.codeit
 
 import android.graphics.Color
 import android.view.View
-import java.lang.Math.sqrt
 import kotlin.random.Random
 
 

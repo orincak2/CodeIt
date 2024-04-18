@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.dp11'
+    namespace 'com.rel.codeit'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.dp11"
+        applicationId "com.rel.codeit"
         minSdk 24
         targetSdk 33
         versionCode 1
