@@ -50,8 +50,8 @@
                         android:layout_weight="96"
                         android:gravity="top"
                         android:hint="Your code"
-                        android:typeface="monospace"
-                        android:inputType="textMultiLine|textNoSuggestions" />
+                        android:inputType="textMultiLine|textNoSuggestions"
+                        android:typeface="monospace" />
                 </LinearLayout>
             </ScrollView>
 
@@ -125,25 +125,28 @@
                     android:textSize="30sp" />
 
                 <ImageView
-                    android:id="@+id/imageView4"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:src="@drawable/n" />
-
-                <ImageView
                     android:id="@+id/imageView2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:src="@drawable/o" />
+                    android:src="@drawable/o"
+                    android:visibility="invisible" />
 
                 <ImageView
                     android:id="@+id/imageView3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:src="@drawable/s" />
+                    android:src="@drawable/s"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:src="@drawable/n" />
+
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -223,7 +226,7 @@
                         android:layout_marginTop="7dp"
                         android:layout_marginBottom="7dp"
                         android:background="@drawable/button_border"
-                        android:text="definuj"
+                        android:text="def"
                         android:textAllCaps="false" />
 
                     <androidx.appcompat.widget.AppCompatButton
@@ -232,7 +235,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="7dp"
                         android:background="@drawable/button_border"
-                        android:text="dopredu"
+                        android:text="for"
                         android:textAllCaps="false" />
 
                     <androidx.appcompat.widget.AppCompatButton
@@ -241,7 +244,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="7dp"
                         android:background="@drawable/button_border"
-                        android:text="vypis"
+                        android:text="print"
                         android:textAllCaps="false" />
 
                     <androidx.appcompat.widget.AppCompatButton
@@ -250,7 +253,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="7dp"
                         android:background="@drawable/button_border"
-                        android:text="vypis"
+                        android:text="else"
                         android:textAllCaps="false" />
 
                     <androidx.appcompat.widget.AppCompatButton
@@ -259,7 +262,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="7dp"
                         android:background="@drawable/button_border"
-                        android:text="vypis"
+                        android:text="range"
                         android:textAllCaps="false" />
                 </LinearLayout>
 
@@ -295,6 +298,7 @@
                                 app:layout_constraintTop_toTopOf="parent">
 
                                 <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:id="@+id/vrch"
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:layout_weight="50">
@@ -314,12 +318,12 @@
                                                 android:layout_height="6000dp"
                                                 android:layout_weight="3"
                                                 android:background="@drawable/boardwithouttop"
+                                                android:focusable="false"
+                                                android:focusableInTouchMode="false"
                                                 android:gravity="top|center"
                                                 android:paddingTop="10dp"
                                                 android:text="1"
                                                 android:textColor="#50FFFFFF"
-                                                android:focusable="false"
-                                                android:focusableInTouchMode="false"
                                                 android:visibility="visible" />
 
 
@@ -330,8 +334,8 @@
                                                 android:layout_weight="96"
                                                 android:gravity="top"
                                                 android:hint="Your code"
-                                                android:typeface="monospace"
-                                                android:inputType="textMultiLine|textNoSuggestions" />
+                                                android:inputType="textMultiLine|textNoSuggestions"
+                                                android:typeface="monospace" />
                                         </LinearLayout>
                                     </ScrollView>
 
@@ -369,8 +373,8 @@
                                         <androidx.constraintlayout.widget.ConstraintLayout
                                             android:id="@+id/TerminalLayout"
                                             android:layout_width="match_parent"
-                                            android:layout_height="0dp"
-                                            android:layout_weight="3">
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="5">
 
                                             <TextView
                                                 android:id="@+id/textView2"
@@ -399,7 +403,7 @@
                                             android:id="@+id/vypisl"
                                             android:layout_width="match_parent"
                                             android:layout_height="0dp"
-                                            android:layout_weight="0"
+                                            android:layout_weight="45"
                                             android:orientation="horizontal"
                                             android:visibility="invisible">
 
@@ -410,15 +414,30 @@
                                                 android:layout_weight="3"
                                                 app:srcCompat="@drawable/boardwithouttop" />
 
-                                            <TextView
+
+                                            <EditText
                                                 android:id="@+id/Vypis"
                                                 android:layout_width="0dp"
                                                 android:layout_height="match_parent"
                                                 android:layout_weight="96"
+                                                android:gravity="top|left"
+                                                android:inputType="textMultiLine|textNoSuggestions"
+                                                android:paddingTop="2dp"
                                                 android:scrollbars="horizontal|vertical"
-                                                android:text="..."
                                                 android:visibility="visible" />
+
                                         </LinearLayout>
+
+                                        <com.rel.codeit.MyKeyboard
+                                            android:id="@+id/keyboard3"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="0"
+                                            android:orientation="vertical"
+                                            android:visibility="invisible"
+                                            tools:layout_constrainedHeight="true">
+
+                                        </com.rel.codeit.MyKeyboard>
 
 
                                     </LinearLayout>
@@ -491,4 +510,4 @@
 
     </LinearLayout>
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

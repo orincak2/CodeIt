@@ -9,6 +9,7 @@ import Turtle.Position
 import Turtle.Rt
 import Turtle.Stvorec
 import Turtle.Trojuholnik
+import android.widget.EditText
 import android.widget.TextView
 import com.rel.codeit.Playground
 import com.rel.codeit.TextHelper
@@ -18,11 +19,11 @@ import com.google.android.material.textview.MaterialTextView
 
 import java.io.IOException
 import kotlin.collections.List
-
+import java.util.Scanner
 fun Boolean.toFloat() = if (this) 1.toFloat() else 0.toFloat()
 fun Float.toBoolean() = if (this == 1.toFloat()) true else false
 
-class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax() {
+class Parser(npg: Playground, nprint: EditText, texH: TextHelper):Syntax() {
     var pg = npg
     var print = nprint
     var turtle = Turtle(pg!!)
@@ -30,6 +31,8 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
     var tabcount = 0
     var bolEnter = false
     var txH = texH
+    var bInput = false
+    var inputHodnota:Any = ""
     class MojaTrieda(val hodnota: Any) {
         operator fun plus(inyObjekt: MojaTrieda): Any {
             if(this.hodnota is Float){
@@ -139,56 +142,76 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
         }
     }
 
-    fun run(txt:TextView){
-        turtle.reset()
-        reset()
-        var leeeen = "def len(x){}"
-        input = txt!!.text.toString().trim()
-        //input.replace("   ", "\t")
-        tabindex = 0
-        tabcount = 0
-        index = 0
-        pomindex = 0
-        bolEnter = false
-        next()
-        scan()
-        globals = mutableMapOf<String, Identifier>()
-        locals = mutableMapOf<String, Variable>()
-        globalvaradr = 2
-        localvardelta = 0
-        //variables = mutableMapOf<String, Int>()
-        //subroutines = mutableMapOf<String, Subroutine>()
-        var program = parse(0)
-        //check(NOTHING)
-        counter_adr = 500
-        mem = MutableList(1000) { Any() }
-        //mem.addAll(List(1000) { Any() })
-        adr = 0
-        poke(INSTRUCTION_JUMP)
-        poke(globalvaradr)
-        adr = globalvaradr
-        //poke(2 + variables.size)
-        //adr = adr + variables.size
-        program.generate()
-        reset()
+    fun run(txt:String, int:Boolean = false, hodnota:String = ""):Boolean{
+        if(!int) {
+            turtle.reset()
+            reset()
+            var leeeen = "def len(x){}"
+            input = txt.toString().trim()
+            //input.replace("   ", "\t")
+            tabindex = 0
+            tabcount = 0
+            index = 0
+            pomindex = 0
+            bInput = false
+            bolEnter = false
+            next()
+            scan()
+            globals = mutableMapOf<String, Identifier>()
+            locals = mutableMapOf<String, Variable>()
+            globalvaradr = 2
+            localvardelta = 0
+            //variables = mutableMapOf<String, Int>()
+            //subroutines = mutableMapOf<String, Subroutine>()
+            var program = parse(0)
+            //check(NOTHING)
+            counter_adr = 500
+            mem = MutableList(1000) { Any() }
+            //mem.addAll(List(1000) { Any() })
+            adr = 0
+            poke(INSTRUCTION_JUMP)
+            poke(globalvaradr)
+            adr = globalvaradr
+            //poke(2 + variables.size)
+            //adr = adr + variables.size
+            program.generate()
+            reset()
+        }
+        inputHodnota = hodnota
+        terminated = false
         while(terminated != true){
             executeP()
         }
-
+        if(bInput)
+            return true
+        return false
     }
     fun fromAnyToFloat(anyFloatValue: Any):Float{
         if(anyFloatValue is Float){
             return anyFloatValue.toFloat()
         }
+        if(anyFloatValue is Boolean){
+            return anyFloatValue.toFloat()
+        }
+
 
         return 99999999.toFloat()
     }
+    fun vypisFloaty(cislo: Any):Any {
+        if(cislo is Int || cislo is Float){
+        if (cislo == (cislo as Float).toInt().toFloat()) {
+            return (cislo as Float).toInt()
+        } else {
+            return cislo
+        }}
+        return cislo
+    }
 
-    fun len(obj: Any): Int {
+    fun len(obj: Any): Float {
         return when (obj) {
-            is String -> obj.length
-            is Array<*> -> obj.size
-            is Collection<*> -> obj.size
+            is String -> obj.length.toFloat()
+            is Array<*> -> obj.size.toFloat()
+            is Collection<*> -> obj.size.toFloat()
             else -> throw IllegalArgumentException("Unsupported type")
         }
     }
@@ -262,7 +285,7 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
             top = top + 1
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_NOT.toFloat()){
             pc += 1
-            if(mem[top] == 1.toFloat()){
+            if(fromAnyToFloat(mem[top]) == 1.toFloat()){
                 mem[top] = 0.toFloat()
             }else{
                 mem[top] = 1.toFloat()
@@ -274,11 +297,11 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
         }
         else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_AND.toFloat()){
             pc += 1
-            mem[top + 1] = (fromAnyToFloat(mem[top + 1]).toBoolean() && fromAnyToFloat(mem[top]).toBoolean()).toFloat()
+            mem[top + 1] = (fromAnyToFloat(mem[top + 1]).toBoolean() && fromAnyToFloat(mem[top]).toBoolean())
             top = top + 1
         } else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_OR.toFloat()){
             pc += 1
-            mem[top + 1] = (fromAnyToFloat(mem[top + 1]).toBoolean() || fromAnyToFloat(mem[top]).toBoolean()).toFloat()
+            mem[top + 1] = (fromAnyToFloat(mem[top + 1]).toBoolean() || fromAnyToFloat(mem[top]).toBoolean())
             top = top + 1
         } else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_LESS.toFloat()){
             pc += 1
@@ -294,15 +317,15 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
             }else{
                 pom2 = fromAnyToFloat(mem[top])
             }
-            mem[top + 1] = (pom1 < pom2).toFloat()
+            mem[top + 1] = (pom1 < pom2)
             top = top + 1
         } else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_GREATER.toFloat()){
             pc += 1
-            mem[top + 1] = (fromAnyToFloat(mem[top + 1]) > fromAnyToFloat(mem[top])).toFloat()
+            mem[top + 1] = (fromAnyToFloat(mem[top + 1]) > fromAnyToFloat(mem[top]))
             top = top + 1
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_NOTEQUAL.toFloat()){
             pc += 1
-            mem[top + 1] = (MojaTrieda(mem[top + 1]).equals(MojaTrieda(mem[top]))).toFloat()
+            mem[top + 1] = (MojaTrieda(mem[top + 1]).equals(MojaTrieda(mem[top])))
             top = top + 1
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_CHOSE.toFloat()){
             //pc += 1
@@ -315,19 +338,19 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
             }
         } else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_LESSEQUAL.toFloat()){
             pc += 1
-            mem[top + 1] = (fromAnyToFloat(mem[top + 1]) <= fromAnyToFloat(mem[top])).toFloat()
+            mem[top + 1] = (fromAnyToFloat(mem[top + 1]) <= fromAnyToFloat(mem[top]))
             top = top + 1
         } else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_GREATEREQUAL.toFloat()){
             pc += 1
-            mem[top + 1] = (fromAnyToFloat(mem[top + 1]) >= fromAnyToFloat(mem[top])).toFloat()
+            mem[top + 1] = (fromAnyToFloat(mem[top + 1]) >= fromAnyToFloat(mem[top]))
             top = top + 1
         } else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_IN.toFloat()){
             pc += 1
-            mem[top + 1] = (mem[top + 1].toString() in mem[top].toString()).toFloat()
+            mem[top + 1] = (mem[top + 1].toString() in mem[top].toString())
             top = top + 1
         } else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_EQUAL.toFloat()){
             pc += 1
-            mem[top + 1] = (mem[top + 1].toString() == mem[top].toString()).toFloat()
+            mem[top + 1] = (mem[top + 1].toString() == mem[top].toString())
             top = top + 1
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_LT.toFloat()){
             pc += 1
@@ -371,9 +394,37 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
             pc = pc + 1
             top = top - 1
             mem[top] = mem[index]
-        }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_PRINT.toFloat()){
+        }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_INPUT.toFloat()){
+            if(bInput) {
+                top = top - 1
+                val number: Float? = inputHodnota.toString().toFloatOrNull()
+                if(number != null) {
+                    mem[top] = number
+                }else{
+                    mem[top] = inputHodnota
+                }
+                pc += 1
+                bInput = false
+            }else{
+                bInput = true
+                terminated = true
+            }
+        }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_PRINT.toFloat()) {
             pc += 1
-            print.setText(print.text.toString() + "\n> " + fromAnyTo(mem[top]))
+            var tt: String = ""
+            if (mem[top] is Boolean) {
+                if (mem[top] as Boolean)
+                    tt = "True"
+                else
+                    tt = "False"
+            } else{
+                tt = vypisFloaty(fromAnyTo(mem[top])).toString()
+            }
+            var novyriadok =""
+            if(tt.length>0){
+                novyriadok = "\n"
+            }
+            print.setText(print.text.toString()+ ">" + tt + novyriadok)
             top = top + 1
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_PUSH.toFloat()){
             pc += 1
@@ -384,7 +435,7 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
             pc = fromAnyToFloat(mem[pc + 1]).toInt()
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_JUMPIFFALSE.toFloat()){
             pc = pc + 1
-            if(mem[top] == 0.toFloat()){
+            if(fromAnyToFloat(mem[top]) == 0.toFloat()){
                 pc = fromAnyToFloat(mem[pc]).toInt()
             }else{
                 pc += 1
@@ -612,52 +663,76 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
                 var test = Syntax()
                 var pom2: Assign? = null
                 var pom3: Assign? = null
-                var prve = expr()
-                if(token == "." || token == "," || token == ";" || token == name){
+
+                if(token == "range"){
                     scan()
-                    if(token == name){
-                       scan()
-                    }
-                    if(token == "." || token == "<" || token == ">") {
+                    if(token == "("){
                         scan()
                     }
-                    rangeEnd = expr()
-                    var pomL = GlobalVariable(name, globalvaradr.toFloat())
-                    pom = Assign(pomL, prve)
-                    globals[name] = pomL
-                    globalvaradr += 1
-                    test = Less(pomL, rangeEnd)
-                }else{
-                    if(prve is MyList || prve is Strings) {
-                        var pomL3 = GlobalVariable(name+"FL", globalvaradr.toFloat())
-                        pom3 = Assign(pomL3, prve)
-                        globals[name+"FL"] = pomL3
+                    var prve = expr()
+                    if(token == ","){
+                        scan()
+                        rangeEnd = expr()
+                        var pomL = GlobalVariable(name, globalvaradr.toFloat())
+                        pom = Assign(pomL, prve)
+                        globals[name] = pomL
                         globalvaradr += 1
-
-                        var pomL = GlobalVariable(name+"FI", globalvaradr.toFloat())
+                        test = Less(pomL, rangeEnd)
+                    }else {
+                        rangeEnd = prve
+                        var pomL = GlobalVariable(name, globalvaradr.toFloat())
                         pom = Assign(pomL, Const((0).toFloat()))
-                        globals[name+"FI"] = pomL
+                        globals[name] = pomL
                         globalvaradr += 1
-
-                        var pomL2 = GlobalVariable(name, globalvaradr.toFloat())
-                        pom2 = Assign(pomL2, ListElement(pomL3, pomL))
-                        globals[name] = pomL2
-                        globalvaradr += 1
-                        test = Less(pomL, pomL3)
+                        test = Less(pomL, rangeEnd)
                     }
-                    else {
-                        var pomL = GlobalVariable(name+"FL", globalvaradr.toFloat())
-                        pom = Assign(pomL, Const((0).toFloat()))
-                        globals[name+"FL"] = pomL
+                }else {
+                    var prve = expr()
+                    if (token == "." || token == "," || token == ";" || token == name) {
+                        scan()
+                        if (token == name) {
+                            scan()
+                        }
+                        if (token == "." || token == "<" || token == ">") {
+                            scan()
+                        }
+                        rangeEnd = expr()
+                        var pomL = GlobalVariable(name, globalvaradr.toFloat())
+                        pom = Assign(pomL, prve)
+                        globals[name] = pomL
                         globalvaradr += 1
+                        test = Less(pomL, rangeEnd)
+                    } else {
+                        if (prve is MyList || prve is Strings) {
+                            var pomL3 = GlobalVariable(name + "FL", globalvaradr.toFloat())
+                            pom3 = Assign(pomL3, prve)
+                            globals[name + "FL"] = pomL3
+                            globalvaradr += 1
 
-                        var pomL2 = GlobalVariable(name, globalvaradr.toFloat())
-                        pom2 = Assign(pomL2, ListElement(prve as Variable, pomL))
-                        globals[name] = pomL2
-                        globalvaradr += 1
-                        test = Less(pomL, prve)
+                            var pomL = GlobalVariable(name + "FI", globalvaradr.toFloat())
+                            pom = Assign(pomL, Const((0).toFloat()))
+                            globals[name + "FI"] = pomL
+                            globalvaradr += 1
+
+                            var pomL2 = GlobalVariable(name, globalvaradr.toFloat())
+                            pom2 = Assign(pomL2, ListElement(pomL3, pomL))
+                            globals[name] = pomL2
+                            globalvaradr += 1
+                            test = Less(pomL, pomL3)
+                        } else {
+                            var pomL = GlobalVariable(name + "FL", globalvaradr.toFloat())
+                            pom = Assign(pomL, Const((0).toFloat()))
+                            globals[name + "FL"] = pomL
+                            globalvaradr += 1
+
+                            var pomL2 = GlobalVariable(name, globalvaradr.toFloat())
+                            pom2 = Assign(pomL2, ListElement(prve as Variable, pomL))
+                            globals[name] = pomL2
+                            globalvaradr += 1
+                            test = Less(pomL, prve)
+                        }
+
                     }
-
                 }
                /* scan()
                // check(SYMBOL, "in")
@@ -718,7 +793,13 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
                 if(token == "("){
                     scan()
                 }
-                result.add(Print(addsub()))
+                var x = expr()
+                while (token == ","){
+                    scan()
+                    var pom = expr()
+                    x = Add(x,pom)
+                }
+                result.add(Print(x))
                 if(token == ")"){
                     scan()
                 }
@@ -1010,6 +1091,24 @@ class Parser(npg: Playground, nprint: MaterialTextView, texH: TextHelper):Syntax
                                     }
                                 }
                             }
+                        }else if (token == "+"){
+                            scan()
+                            if(token == "="){
+                                scan()
+                            }
+                            var nieco = globals[name]
+                            val r = expr()
+                            result.add(Assign(nieco, Add(nieco as Variable,r)))
+
+                        }else if (token == "-"){
+                            scan()
+                            if(token == "="){
+                                scan()
+                            }
+                            var nieco = globals[name]
+                            val r = expr()
+                            result.add(Assign(nieco, Sub(nieco as Variable,r)))
+
                         } else {
                             var subr = globals[name] as Subroutine
                             var agrs = Block()
@@ -1326,6 +1425,22 @@ fun elementsO():MyList{
                         result = Len(expr())
                     }
 
+                }else if(token == "input"){
+                    scan()
+                    check(arrayOf(SYMBOL), arrayOf("("))
+                    if (token == "(") {
+                        scan()
+                        if(token != ")") {
+                            var agrs = expr()
+                            check(arrayOf(SYMBOL), arrayOf(")"))
+                            result = Input(agrs)
+                        }else{
+                            result = Input(Strings(""))
+                        }
+                    }else{
+                        result = Input(Strings(""))
+                    }
+
                 }else{
                     throw Exception("Neznáma premenna" + "?" + index)
                 }
@@ -1354,7 +1469,7 @@ fun elementsO():MyList{
             return operand()
         }
         scan()
-        check(arrayOf(WORD, SYMBOL), emptyArray(), pomindex)
+        //check(arrayOf(WORD, SYMBOL), emptyArray(), pomindex)
         var result = expr()
        // check(SYMBOL, ")")
         scan()
@@ -1366,7 +1481,7 @@ fun elementsO():MyList{
             return braces()
         }
         scan()
-        check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
+        //check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
         return Minus(braces())
     }
 
@@ -1376,11 +1491,11 @@ fun elementsO():MyList{
         while(true){
             if(token == "*"){
                 scan()
-                check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
+               // check(arrayOf(WORD, NUMBER, SYMBOL), emptyArray(), pomindex)
                 result = Mul(result, minus())
             }else if(token == "/"){
                 scan()
-                check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
+                //check(arrayOf(WORD, NUMBER, SYMBOL), emptyArray(), pomindex)
                 result = Div(result, minus())
             }else{
                 return result
@@ -1393,11 +1508,11 @@ fun elementsO():MyList{
         while(true){
             if(token == "+"){
                 scan()
-                check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
+               // check(arrayOf(WORD, NUMBER, SYMBOL), emptyArray(), pomindex)
                 result = Add(result, multdiv())
             }else if(token == "-"){
                 scan()
-                check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
+               // check(arrayOf(WORD, NUMBER, SYMBOL), emptyArray(), pomindex)
                 result = Sub(result, multdiv())
             }else{
                 return result
@@ -1410,26 +1525,26 @@ fun elementsO():MyList{
         while(true){
             if(token == "<"){
                 scan()
-                check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
+                //check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
                 result = Less(result, addsub())
             }else if(token == ">"){
                 scan()
-                check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
+               // check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
                 result = Greater(result, addsub())
             }else if(token == "==" || token == "="){
                 scan()
-                check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
+               // check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
                 result = Equal(result, addsub())
             }else if(token == "<="){
                 scan()
-                check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
+                //check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
                 result = LessEqual(result, addsub())
             }else if(token == "!="){
                 scan()
                 result = NotEqual(result, addsub())
             }else if(token == ">="){
                 scan()
-                check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
+               // check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
                 result = GreaterEqual(result, addsub())
             }else if(token == "in"){
                 scan()
@@ -1446,7 +1561,7 @@ fun elementsO():MyList{
             return compare()
         }
         scan()
-        check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
+        //check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
         return Not(compare())
     }
 
@@ -1456,7 +1571,7 @@ fun elementsO():MyList{
             return result
         }
         scan()
-        check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
+        //check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
         return And(result, not())
     }
 
@@ -1466,7 +1581,7 @@ fun elementsO():MyList{
             return result
         }
         scan()
-        check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
+        //check(arrayOf(WORD, NUMBER), emptyArray(), pomindex)
         return Or(result, and())
     }
 

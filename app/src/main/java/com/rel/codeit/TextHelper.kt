@@ -15,6 +15,7 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
     var eText = text
     var inputt = ""
     var tokenPred = ""
+    var tokenPredPRED = false
     var index = 0
     var look = '0'
     var token = ""
@@ -89,29 +90,33 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
             if(token == "definuj" || token == "def" || token == "fun" || token == "metoda"|| token == "funkcia"){
                 pom += getColoredText(token, Color.rgb(255, 165, 0).toString())
                 pom = scan(pom,jeMedzernik, true)
-                pom += getColoredText(token, Color.BLUE.toString())
+                tokenPredPRED = true
+                pom += getColoredText(token, Color.rgb(102,0,204).toString())
             }else if(ind != 0 && ind <= index && !chyba){
                 pom += getColoredTextWithBackground(token, Color.rgb(0,0,0).toString(),Color.rgb(255,0,0).toString())
                 chyba = true
             } else if(token == "for" || token == "cyklus" || token == "foreach" || token == "opakuj" || token == "repeat" || token == "kym" || token == "while" || token == "ak" || token == "if" || token == "inak" || token == "else"){
-                pom += getColoredText(token, Color.rgb(255,105,180).toString())
-            }else if(token == "vrat" || token == "return"){
+                pom += getColoredText(token, Color.rgb(255, 102, 255).toString())
+            }else if(token == "vrat" || token == "return" || token == "in" || token == "range"){
                 pom += getColoredText(token, Color.rgb(255, 165, 0).toString())
             }else if(token == "true" || token == "false"){
                 pom += getColoredText(token, Color.rgb(255, 165, 0).toString())
-            }else if(token == "vypis" || token == "print"){
-            pom += getColoredText(token, Color.BLUE.toString())
+            }else if(token == "vypis" || token == "print" || token == "len" || token == "input" || token == "and" || token == "or"){
+            pom += getColoredText(token, Color.rgb(102,0,204).toString())
             }else if(token[0] == '\"'){
-                pom += getColoredText(token, Color.GREEN.toString())
-            }else if(kind == NUMBER && tokenPred == "="){
+                pom += getColoredText(token, Color.rgb(0,180,0).toString())
+            }else if(kind == NUMBER){
                 pom += getColoredText(token, Color.CYAN.toString())
             }else if((wordHelper.any { it.equals(token) })){
                 val index = wordHelper.indexOfFirst { it.equals(token) }
                 if(wordHelper[index].isSUb || token == "kruh" || token == "stvorec" || token == "trojuholnik" || token == "turtle" || token == "korytnacka" || token == "dopredu" || token == "forward" || token == "left" || token == "vlavo" || token == "vpravo" || token == "right") {
-                    pom += getColoredText(token, Color.BLUE.toString())
+                    pom += getColoredText(token, Color.rgb(102,0,204).toString())
                 }else{
-
-                    pom += getColoredText(token, Color.BLACK.toString())
+                    if(kind == SYMBOL){
+                        pom += getColoredText(token, Color.rgb(0,0,230).toString())
+                    }else {
+                        pom += getColoredText(token, Color.BLACK.toString())
+                    }
                 }
             }else
             {
@@ -125,10 +130,11 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
                 }
                 else if(token == "(" && (subHelper[tokenPred] != null) && look == 0.toChar()){
                     pom += getColoredText(token, Color.BLACK.toString()) + getColoredText("&#8206;"+ subHelper[tokenPred]+"&#8206;", Color.argb(100,210,210,210).toString())
-                }else if(token == "(" && (wordHelper.any { it.equals(tokenPred) }) && (!subHelper.any(){it.equals(tokenPred)})){
+                }else if(token == "(" && (wordHelper.any { it.equals(tokenPred) }) && (!subHelper.any(){it.equals(tokenPred)}) && !helpuj && tokenPredPRED){
                     subHName = tokenPred
                     helpuj = true
-                    pom += getColoredText(token, Color.BLACK.toString())
+                    tokenPredPRED = false
+                    pom += getColoredText(token, Color.rgb(0,0,230).toString())
                 }
 
 
@@ -141,9 +147,14 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
                             subHText = ""
                         }
                     }
-                    pom += getColoredText(token, Color.BLACK.toString())
+                    if(kind == SYMBOL){
+                        pom += getColoredText(token, Color.rgb(0,0,230).toString())
+                    }else {
+                        pom += getColoredText(token, Color.BLACK.toString())
+                    }
                 }
             }
+
             tokenPred = token
             pom = scan(pom,jeMedzernik)
             Log.d("aaa", token + " ! " + tokenPred)
@@ -172,9 +183,13 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
         token = ""
         if(look == 8206.toChar()){
             next()
-            while (look != 8206.toChar())
+            var a = 0
+            while (look != 8206.toChar() && look != ')' && a < 1000){
                 next()
-            next()
+                a++
+            }
+            if(look != ')')
+                next()
         }
         if(look.isDigit()){
             while(look.isDigit()){
@@ -205,12 +220,14 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
         }else if(look == '\"'){
             token += look
             next()
-            while(look != '\"' && look != 0.toChar()){
+            while(look != '\"' && look != 0.toChar() && look != '\n'){
                 token += look
                 next()
             }
-            token += look
-            next()
+            if(look != '\n') {
+                token += look
+                next()
+            }
             kind = WORD
         }else if(look == '<' || look == '>'){
             if(look == '<'){
@@ -246,7 +263,10 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
     }
 
     fun getColoredText(text: String, color: String): String? {
-        return "<font color=$color>$text</font>"
+        if(color == Color.BLACK.toString() || color == Color.CYAN.toString() || color == Color.rgb(0,180,0).toString()){
+            return "<font color=$color>$text</font>"
+        }
+        return "<b><font color=$color>$text</font></b>"
     }
 
     fun getColoredTextWithBackground(text: String, textColor: String, backgroundColor: String): String {

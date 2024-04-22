@@ -11,6 +11,7 @@ import android.view.inputmethod.ExtractedTextRequest
 import android.view.inputmethod.InputConnection
 import android.widget.Button
 import android.widget.LinearLayout
+import androidx.core.view.forEach
 
 
 class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayout(context,attrs), View.OnClickListener{
@@ -18,12 +19,14 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
     var keyValues = SparseArray<String>()
     var inputConection : InputConnection?= null
     var ac : MainActivity?= null
+    var tabs = 0
 
     var button1 : Button? = null
     var button0 : Button? = null
     var button2 : Button? = null
     var button3 : Button? = null
     var button4 : Button? = null
+    var buttonvyk : Button? = null
     var button5 : Button? = null
     var button6 : Button? = null
     var button7 : Button? = null
@@ -61,6 +64,7 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
     var buttonmed : Button? = null
     var buttonent : Button? = null
     var buttonrov : Button? = null
+    var buttonshift : Button? = null
 
     var buttonLavaN : Button? = null
     var buttonLavaK : Button? = null
@@ -86,6 +90,8 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
         inputConection!!.commitText("",sData.count()+1)
     }
 
+
+
     override fun onClick(v: View?) {
         if(inputConection == null){
             return
@@ -93,6 +99,8 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
         if(v!!.getId() == R.id.button_maz) {
             var st = inputConection!!.getSelectedText(0)
             if (TextUtils.isEmpty(st)) {
+                val s = inputConection!!.getTextBeforeCursor(1000000, 0)
+                val ss = inputConection!!.getTextBeforeCursor(1, 0)
                 inputConection!!.deleteSurroundingText(1, 0)
             } else {
                 inputConection!!.commitText("", 1)
@@ -119,15 +127,49 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
 
         }
         else if (v!!.getId() == R.id.button_ent){
+            val s = inputConection!!.getTextBeforeCursor(1000000, 0)!!.split('\n')
+            var ss = s[s.lastIndex]
+            var zac = 0
+            tabs = 0
+            for( char in ss){
+                if(zac == 0 || zac == tabs){
+                    if(char == ' '){
+                        tabs++
+                    }
+                }
+                zac++
+            }
             var value = keyValues.get(v!!.getId())
+            val sss = inputConection!!.getTextBeforeCursor(1, 0)
+            if(sss == ":")
+                tabs +=1
+            if(tabs > 0){
+                value = value + "\t".repeat(tabs)
+            }
             inputConection!!.commitText(value,1)
             val et: ExtractedText = inputConection!!.getExtractedText(ExtractedTextRequest(), 0)
             val selectionStart = et.selectionStart
             ac!!.parseColor()
-            inputConection!!.commitText("", selectionStart+1)
+            inputConection!!.commitText("", selectionStart+2)
             ac!!.setWords()
             ac!!.addline()
+            if(ac!!.bInput!!){
+                ac!!.opakujsInputom()
+            }
+            else if(ac!!.term){
+                ac!!.cezterminal()
+            }else{}
+        }
+        else if (v!!.getId() == R.id.button_tab){
+            if(ac!!.term){
+                ac!!.otvorter()
+            }else {
+                ac!!.zavriklavesnicu()
+            }
         }else{
+            if((v!!.getId() == R.id.button_shift)){
+                tabs++
+            }
             var value = keyValues.get(v!!.getId())
             inputConection!!.commitText(value,1)
             val et: ExtractedText = inputConection!!.getExtractedText(ExtractedTextRequest(), 0)
@@ -150,6 +192,7 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
         button2 = findViewById(R.id.button_2)
         button3 = findViewById(R.id.button_3)
         button4 = findViewById(R.id.button_4)
+        buttonvyk = findViewById(R.id.button_vyk)
         button5 = findViewById(R.id.button_5)
         button6 = findViewById(R.id.button_6)
         button7 = findViewById(R.id.button_7)
@@ -189,6 +232,7 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
         buttonmed = findViewById(R.id.button_med)
         buttonent = findViewById(R.id.button_ent)
         buttonrov = findViewById(R.id.button_tab)
+        buttonshift = findViewById(R.id.button_shift)
         buttonLavaK = findViewById(R.id.button_lavaK)
         buttonLavaN = findViewById(R.id.button_lavaN)
         buttonPravaK = findViewById(R.id.button_pravaK)
@@ -208,12 +252,14 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
         button2 !!.setOnClickListener(this)
         button3 !!.setOnClickListener(this)
         button4 !!.setOnClickListener(this)
+        buttonvyk !!.setOnClickListener(this)
         button5 !!.setOnClickListener(this)
         button6 !!.setOnClickListener(this)
         button7 !!.setOnClickListener(this)
         button8 !!.setOnClickListener(this)
         button9 !!.setOnClickListener(this)
         button0 !!.setOnClickListener(this)
+        buttonshift !!.setOnClickListener(this)
         buttonmaz !!.setOnClickListener(this)
         buttona !!.setOnClickListener(this)
         buttonq !!.setOnClickListener(this)
@@ -266,6 +312,7 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
         keyValues.put(R.id.button_2, "2")
         keyValues.put(R.id.button_3, "3")
         keyValues.put(R.id.button_4, "4")
+        keyValues.put(R.id.button_vyk, "!")
         keyValues.put(R.id.button_5, "5")
         keyValues.put(R.id.button_6, "6")
         keyValues.put(R.id.button_7, "7")
@@ -302,7 +349,7 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
         keyValues.put(R.id.button_prava, "]")
         keyValues.put(R.id.button_med, " ")
         keyValues.put(R.id.button_ent, "\n")
-        keyValues.put(R.id.button_tab, "\t")
+        keyValues.put(R.id.button_shift, "\t")
         keyValues.put(R.id.button_pravaN, ")")
         keyValues.put(R.id.button_pravaK, "}")
         keyValues.put(R.id.button_lavaN, "(")

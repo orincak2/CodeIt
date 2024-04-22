@@ -2,13 +2,18 @@ package com.rel.codeit
 
 
 import Parser.Parser
+import android.R.id.button3
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Html
 import android.text.InputType
 import android.text.method.ScrollingMovementMethod
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -19,13 +24,17 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.google.android.material.textview.MaterialTextView
 import java.util.Timer
 import kotlin.concurrent.schedule
 
 
 class MainActivity : AppCompatActivity() {
     var lincounter = 1
+    var bInput :Boolean? = false
+    var term = false
+    var pomTerString:String = ""
+    private lateinit var gestureDetector: GestureDetector
+
     var txt: EditText?= null
     var txt2: EditText?= null
     var txt3: EditText?= null
@@ -39,12 +48,15 @@ class MainActivity : AppCompatActivity() {
     var wordsHelper = mutableListOf<WordHelper>()
     var th: TextHelper? = null
     var turtle: Turtle? = null
-    var print: MaterialTextView? = null
+    var print: EditText? = null
     var pg: Playground? = null
     var parser: Parser? = null
+    var dvoj = false
     var runButton: ImageView? = null
+    var neue: ImageView? = null
     var openCloseTerminal: ImageView? = null
     var keyboardMain: MyKeyboard? = null
+    var keyboardMain2: MyKeyboard? = null
     var keyboardFullScreen: MyKeyboard? = null
     var openFullScreen: ImageView? = null
     var closeFullScreen: ImageView? = null
@@ -52,8 +64,16 @@ class MainActivity : AppCompatActivity() {
     var vypisl: LinearLayout? = null
     var TerminalLayout: LinearLayout? = null
     var fullScreenLayout: ConstraintLayout? = null
+    var tr: ConstraintLayout? = null
     var fullScreenLayoutKey: ConstraintLayout? = null
     var spodok: ConstraintLayout? = null
+    var vrch: ConstraintLayout? = null
+    var startX = 0f
+    var startY = 0f
+    private val MAX_EXECUTION_TIME = 5000 // Maximálny čas vykonávania v milisekundách
+
+
+    var handler: Handler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         init()
-
+        handler = Handler(Looper.getMainLooper());
         val timer = Timer().schedule(1000,20){
             runOnUiThread{
                 pg!!.invalidate()
@@ -94,39 +114,85 @@ class MainActivity : AppCompatActivity() {
             txt3!!.text = txt4!!.text
             th!!.setText(txt)
         }
+
+        fun otvorter(){
+            openCloseTerminal!!.setVisibility(View.VISIBLE)
+            openFullScreen!!.setVisibility(View.VISIBLE)
+
+            val param = LinearLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                0,
+                40.0f
+            )
+            val param2 = LinearLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                0,
+                16.0f
+            )
+            val param3 = LinearLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                0,
+                50.0f
+            )
+            val param4 = LinearLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                0,
+                3.0f
+            )
+            val param5 = LinearLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                0,
+                0.0f
+            )
+            openCloseTerminal!!.setImageResource(com.google.android.material.R.drawable.mtrl_ic_arrow_drop_down)
+            vypisl!!.setLayoutParams(param2)
+            spodok!!.setLayoutParams(param)
+            keyboardMain2!!.setLayoutParams(param5)
+            tr!!.setLayoutParams(param4)
+            vrch!!.setLayoutParams(param3)
+            vypisl!!.setVisibility(View.VISIBLE)
+            keyboardMain2!!.setVisibility(View.INVISIBLE)
+            term = false
+        }
+
         openCloseTerminal!!.setOnClickListener {
+            openCloseTerminal!!.setVisibility(View.VISIBLE)
+            openFullScreen!!.setVisibility(View.VISIBLE)
             if(vypisl!!.visibility == View.INVISIBLE) {
-                val param = LinearLayout.LayoutParams(
-                    ConstraintLayout.LayoutParams.MATCH_PARENT,
-                    0,
-                    40.0f
-                )
-                val param2 = LinearLayout.LayoutParams(
-                    ConstraintLayout.LayoutParams.MATCH_PARENT,
-                    0,
-                    16.0f
-                )
-                openCloseTerminal!!.setImageResource(com.google.android.material.R.drawable.mtrl_ic_arrow_drop_down)
-                vypisl!!.setLayoutParams(param2)
-                spodok!!.setLayoutParams(param)
-                vypisl!!.setVisibility(View.VISIBLE)
+                otvorter()
             }else{
-                val param = LinearLayout.LayoutParams(
-                    ConstraintLayout.LayoutParams.MATCH_PARENT,
-                    0,
-                    4.0f
-                )
-                val param2 = LinearLayout.LayoutParams(
-                    ConstraintLayout.LayoutParams.MATCH_PARENT,
-                    0,
-                    0.0f
-                )
-                openCloseTerminal!!.setImageResource(com.google.android.material.R.drawable.mtrl_ic_arrow_drop_up)
-                vypisl!!.setLayoutParams(param2)
-                spodok!!.setLayoutParams(param)
-                vypisl!!.setVisibility(View.INVISIBLE)
+                if(term){
+                    otvorter()
+                }else {
+                    val param = LinearLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.MATCH_PARENT,
+                        0,
+                        4.0f
+                    )
+                    val param2 = LinearLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.MATCH_PARENT,
+                        0,
+                        0.0f
+                    )
+                    val param3 = LinearLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.MATCH_PARENT,
+                        0,
+                        50.0f
+                    )
+
+                    openCloseTerminal!!.setImageResource(com.google.android.material.R.drawable.mtrl_ic_arrow_drop_up)
+                    vypisl!!.setLayoutParams(param2)
+                    spodok!!.setLayoutParams(param)
+                    vrch!!.setLayoutParams(param3)
+                    vypisl!!.setVisibility(View.INVISIBLE)
+                    keyboardMain2!!.setVisibility(View.INVISIBLE)
+                    keyboardMain2!!.setLayoutParams(param2)
+                    term = false
+                }
             }
         }
+
+
 
         txtFullScreen!!.setOnClickListener {
             if(keyboardFullScreen!!.visibility == View.INVISIBLE){
@@ -148,6 +214,27 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onDoubleTap(e: MotionEvent): Boolean {
+                if(keyboardMain!!.visibility == View.INVISIBLE){
+                }else{
+                     zavriklavesnicu()
+                    dvoj = true
+                }
+                return true
+            }
+        })
+        txt!!.setOnTouchListener { _, event ->
+            gestureDetector.onTouchEvent(event)
+            if(dvoj){
+                dvoj = false
+                true
+            }else{
+                dvoj = false
+
+                false
+            }
+        }
 
         txt!!.setOnClickListener{
             if(keyboardMain!!.visibility == View.INVISIBLE){
@@ -160,11 +247,91 @@ class MainActivity : AppCompatActivity() {
                 TerminalLayout!!.setVisibility(View.INVISIBLE)
                 keyboardMain!!.setVisibility(View.VISIBLE)
             }else{
-                zavriklavesnicu()
+               // zavriklavesnicu()
             }
         }
 
 
+        fun klav2(){
+            if(keyboardMain2!!.visibility == View.INVISIBLE){
+                val param = LinearLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    0,
+                    55.0f
+                )
+                val param2 = LinearLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    0,
+                    0.0f
+                )
+                val param3 = LinearLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    0,
+                    1.0f
+                )
+                val param4 = LinearLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    0,
+                    7.0f
+                )
+                val param5 = LinearLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    0,
+                    45.0f
+                )
+                spodok!!.setLayoutParams(param3)
+                vrch!!.setLayoutParams(param2)
+                vypisl!!.setLayoutParams(param5)
+                keyboardMain2!!.setLayoutParams(param)
+                tr!!.setLayoutParams(param4)
+                tr!!.setVisibility(View.VISIBLE)
+                vypisl!!.setVisibility(View.VISIBLE)
+                keyboardMain2!!.setVisibility(View.VISIBLE)
+                print!!.setSelection(print!!.text.length)
+
+            }else{
+                print!!.setSelection(print!!.text.length)
+            }
+        }
+        print!!.setOnClickListener{
+
+            //klav2()
+            //term = true
+        }
+
+        fun isAClick(startX: Float, startY: Float, endX: Float, endY: Float): Boolean {
+            val dx = startX - endX
+            val dy = startY - endY
+            val distance = Math.sqrt((dx * dx + dy * dy).toDouble())
+            return distance < 10 // Prahová hodnota pre určenie kliknutia, môžeš ju prispôsobiť podľa potreby
+        }
+
+        print!!.setOnTouchListener { _, event ->
+            // Zabraňuje ďalšiemu spracovaniu udalosti, ktorá spôsobila ťahanie (drag)
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    startX = event.x
+                    startY = event.y
+                    false
+                }
+                MotionEvent.ACTION_UP -> {
+                    val endX = event.x
+                    val endY = event.y
+                    if (isAClick(startX, startY, endX, endY)) {
+                        //print!!.performClick()
+                        klav2()
+                        term = true
+                        print!!.setSelection(print!!.text.length)
+                        false
+
+                    }else {
+                        true
+                    }
+                }
+
+                else -> false
+            }
+        }
 
         but1!!.setOnClickListener {
           /* txt!!.setText("a = turtle(300,300, \"modra\")" +
@@ -353,12 +520,12 @@ class MainActivity : AppCompatActivity() {
                         "\ntrojuholnik(500,100,100,\"blue\")")
             }
             if(txt!!.text.toString() == "7"){
-                txt!!.setText("hslovo=\"kolki\"" +
-                        "\npole=[\"o\",\"p\",\"k\",\"l\",\"i\"]" +
+                txt!!.setText("hslovo=\"optimista\"" +
                         "\ntslovo = len(hslovo)*\"_\"" +
-                        "\npom=0" +
+                        "\n" +
+                        "\nneuspesne = 0" +
                         "\nwhile tslovo != hslovo:" +
-                        "\n\tznak=pole[pom]" +
+                        "\n\tznak=input(\"Zadaj znak:\")" +
                         "\n\tif znak in hslovo:" +
                         "\n\t\tnove=\"\"" +
                         "\n\t\tfor i in hslovo:" +
@@ -367,30 +534,179 @@ class MainActivity : AppCompatActivity() {
                         "\n\t\t\telse:" +
                         "\n\t\t\t\tnove=nove+\"_\"" +
                         "\n\t\ttslovo=nove" +
-                        "\n\tprint(tslovo)" +
-                        "\n\tpom=pom+1" +
-                        "\n\tif pom > 4:" +
-                        "\n\t\ttslovo=hslovo")
+                        "\n\tprint(\"Zatial mas slovo: \" + tslovo)")
+            }
+            if(txt!!.text.toString() == "8"){
+                txt!!.setText("a = 0" +
+                        "\nwhile(a<3):" +
+                        "\n\tprint(a)" +
+                        "\n\tb = input(\"Zadaj cislo:\")" +
+                        "\n\ta=a+1" +
+                        "\n\tprint(b)")
             }
 
 
             //wordHelpButttonClicked(but5)
         }
+
+
+
+
         print!!.setMovementMethod(ScrollingMovementMethod())
         runButton!!.setOnClickListener {
+            pomTerString = ""
             zavriklavesnicu()
             try {
-                parser!!.run(txt!!)
+
+
+                bInput = parser!!.run(txt!!.text.toString())
+
+
+
+                // Spracovanie úspešného výsledku
+                if(bInput!!){
+                    klav2()
+                    openCloseTerminal!!.setVisibility(View.INVISIBLE)
+                    openFullScreen!!.setVisibility(View.INVISIBLE)
+                    print!!.performClick()
+                    print!!.requestFocus()
+                }
+
+
+                //bInput = parser!!.run(txt!!.text.toString())
+
+
+
             } catch (e: Exception) {
-                print!!!!.setText(Html.fromHtml(getColoredText(e.message.toString().split('?')[0], Color.RED.toString())))
+                print!!.setText(Html.fromHtml(getColoredText(print!!.text.toString() + "<br>", Color.BLACK.toString()) + getColoredText(e.message.toString().split('?')[0], Color.RED.toString()) + "<br>") )
                 var pom = e.message.toString().split('?')
                 if (pom.size > 1)
                     parseColor(e.message.toString().split('?')[1].toInt())
             }
 
         }
+
+        neue!!.setOnClickListener {
+            txt!!.setText("")
+            print!!.setText("")
+
+        }
     }
 
+    fun otvorter(){
+        openCloseTerminal!!.setVisibility(View.VISIBLE)
+        openFullScreen!!.setVisibility(View.VISIBLE)
+
+        val param = LinearLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.MATCH_PARENT,
+            0,
+            40.0f
+        )
+        val param2 = LinearLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.MATCH_PARENT,
+            0,
+            16.0f
+        )
+        val param3 = LinearLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.MATCH_PARENT,
+            0,
+            50.0f
+        )
+        val param4 = LinearLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.MATCH_PARENT,
+            0,
+            3.0f
+        )
+        val param5 = LinearLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.MATCH_PARENT,
+            0,
+            0.0f
+        )
+        openCloseTerminal!!.setImageResource(com.google.android.material.R.drawable.mtrl_ic_arrow_drop_down)
+        vypisl!!.setLayoutParams(param2)
+        spodok!!.setLayoutParams(param)
+        keyboardMain2!!.setLayoutParams(param5)
+        tr!!.setLayoutParams(param4)
+        vrch!!.setLayoutParams(param3)
+        vypisl!!.setVisibility(View.VISIBLE)
+        keyboardMain2!!.setVisibility(View.INVISIBLE)
+        term = false
+    }
+
+    fun zatvorter(){
+        val param = LinearLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.MATCH_PARENT,
+            0,
+            4.0f
+        )
+        val param2 = LinearLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.MATCH_PARENT,
+            0,
+            0.0f
+        )
+        val param3 = LinearLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.MATCH_PARENT,
+            0,
+            50.0f
+
+        )
+
+        openCloseTerminal!!.setImageResource(com.google.android.material.R.drawable.mtrl_ic_arrow_drop_up)
+        vypisl!!.setLayoutParams(param2)
+        spodok!!.setLayoutParams(param)
+        vrch!!.setLayoutParams(param3)
+        vypisl!!.setVisibility(View.INVISIBLE)
+        keyboardMain2!!.setVisibility(View.INVISIBLE)
+        keyboardMain2!!.setLayoutParams(param2)
+        term = false
+
+    }
+    fun opakujsInputom(){
+            var pole = print!!.text.split("\n")
+            var ind = pole.lastIndex
+            var inputt = print!!.text.split("\n")[ind-1].replace("\"","")
+            bInput = parser!!.run(txt!!.text.toString(), true,inputt)
+        if(bInput!!){
+            openCloseTerminal!!.setVisibility(View.INVISIBLE)
+            openFullScreen!!.setVisibility(View.INVISIBLE)
+            print!!.performClick()
+            print!!.requestFocus()
+        }else{
+            otvorter()
+        }
+    }
+
+    fun cezterminal(){
+        var pole = print!!.text.split("\n")
+        var ind = pole.lastIndex
+        var inputt = print!!.text.split("\n")[ind-1].replace("\"","")
+
+        if(inputt.contains("=") && (!inputt.contains("==") && !inputt.contains("!=") && !inputt.contains("<=") && !inputt.contains(">="))){
+            pomTerString += inputt + "\n"
+        }
+        else{
+            if(inputt == "\n" || inputt == "" || inputt.contains("False") || inputt.contains("True")){}else{
+            inputt = "print "+inputt}
+        }
+        if(inputt == "\n" || inputt == "" || inputt.contains("False") || inputt.contains("True")){}else{
+            try {
+
+                bInput = parser!!.run(pomTerString + inputt)
+            } catch (e: Exception) {
+                print!!.setText(Html.fromHtml(getColoredText(print!!.text.toString() + "<br>", Color.BLACK.toString()) + getColoredText(e.message.toString().split('?')[0], Color.RED.toString()) + "<br>"))
+                var pom = e.message.toString().split('?')
+                if (pom.size > 1)
+                    parseColor(e.message.toString().split('?')[1].toInt())
+            }
+            print!!.performClick()
+            print!!.requestFocus()
+
+
+
+
+        }
+
+    }
     fun getColoredText(text: String, color: String): String? {
         return "<font color=$color>$text</font>"
     }
@@ -458,6 +774,7 @@ class MainActivity : AppCompatActivity() {
 
         TerminalLayout!!.setVisibility(View.VISIBLE)
         keyboardMain!!.setVisibility(View.INVISIBLE)
+        keyboardMain2!!.setVisibility(View.INVISIBLE)
     }
 
     fun init(){
@@ -476,34 +793,40 @@ class MainActivity : AppCompatActivity() {
         but5 = findViewById(R.id.button2)
 
         wordsHelper.add(WordHelper("def", 4, 1))
-        wordsHelper.add(WordHelper("definuj", 4, 1))
+        //wordsHelper.add(WordHelper("definuj", 4, 1))
         wordsHelper.add(WordHelper("for", 5,1))
         wordsHelper.add(WordHelper("print", 6,1))
-        wordsHelper.add(WordHelper("vypis", 6,1))
-        wordsHelper.add(WordHelper("inak", 7,1))
+        //wordsHelper.add(WordHelper("vypis", 6,1))
+        //wordsHelper.add(WordHelper("inak", 7,1))
         wordsHelper.add(WordHelper("else", 7,1))
         wordsHelper.add(WordHelper("turtle", 8,1))
-        wordsHelper.add(WordHelper("korytnacka", 8,1))
+        //wordsHelper.add(WordHelper("korytnacka", 8,1))
         wordsHelper.add(WordHelper("while", 9,1))
-        wordsHelper.add(WordHelper("kym", 9,1))
+        wordsHelper.add(WordHelper("input", 9,1))
+        wordsHelper.add(WordHelper("range", 9,1))
+       // wordsHelper.add(WordHelper("kym", 9,1))
         wordsHelper.add(WordHelper("return", 10,1))
-        wordsHelper.add(WordHelper("vrat", 10,1))
-        wordsHelper.add(WordHelper("dopredu", 13,1))
-        wordsHelper.add(WordHelper("vpravo", 14,1))
-        wordsHelper.add(WordHelper("vlavo", 15,1))
+        wordsHelper.add(WordHelper("len", 10,1))
+        //wordsHelper.add(WordHelper("vrat", 10,1))
+        //wordsHelper.add(WordHelper("dopredu", 13,1))
+        //wordsHelper.add(WordHelper("vpravo", 14,1))
+        //wordsHelper.add(WordHelper("vlavo", 15,1))
         wordsHelper.add(WordHelper("stvorec", 16,1))
         wordsHelper.add(WordHelper("trojuholnik", 17,1))
         wordsHelper.add(WordHelper("kruh", 18,1))
-        wordsHelper.add(WordHelper("farba", 18,1))
-        wordsHelper.add(WordHelper("pozicia", 18,1))
+        //wordsHelper.add(WordHelper("farba", 18,1))
+       // wordsHelper.add(WordHelper("pozicia", 18,1))
         th = TextHelper(txt, but1, but2, but3, but4, but5, wordsHelper)
 
         if (Build.VERSION.SDK_INT >= 21) {
             txt!!.showSoftInputOnFocus = false
             txt2!!.showSoftInputOnFocus = false
+            print!!.showSoftInputOnFocus = false
         } else if (Build.VERSION.SDK_INT >= 11) {
             txt!!.setRawInputType(InputType.TYPE_CLASS_TEXT)
             txt!!.setTextIsSelectable(true)
+            print!!.setRawInputType(InputType.TYPE_CLASS_TEXT)
+            print!!.setTextIsSelectable(true)
             txt2!!.setRawInputType(InputType.TYPE_CLASS_TEXT)
             txt2!!.setTextIsSelectable(true)
             txt3!!.setRawInputType(InputType.TYPE_CLASS_TEXT)
@@ -513,6 +836,8 @@ class MainActivity : AppCompatActivity() {
         } else {
             txt!!.setRawInputType(InputType.TYPE_NULL)
             txt!!.isFocusable = true
+            print!!.setRawInputType(InputType.TYPE_NULL)
+            print!!.isFocusable = true
             txt2!!.setRawInputType(InputType.TYPE_NULL)
             txt2!!.isFocusable = true
             txt3!!.setRawInputType(InputType.TYPE_NULL)
@@ -522,11 +847,16 @@ class MainActivity : AppCompatActivity() {
         }
         parser = Parser(pg!!,print!!,th!!)
         runButton = findViewById(R.id.imageView44)
+        neue = findViewById(R.id.imageView4)
         openCloseTerminal = findViewById(R.id.imageView6)
 
         keyboardMain = findViewById(R.id.keyboard)
+        keyboardMain2 = findViewById(R.id.keyboard3)
         var icM = txt!!.onCreateInputConnection(EditorInfo())
         keyboardMain!!.setsInputConection(icM, this)
+
+        var icM2 = print!!.onCreateInputConnection(EditorInfo())
+        keyboardMain2!!.setsInputConection(icM2, this)
 
         keyboardFullScreen = findViewById(R.id.keyboard2)
         var icF = txt2!!.onCreateInputConnection(EditorInfo())
@@ -540,20 +870,29 @@ class MainActivity : AppCompatActivity() {
         fullScreenLayout = findViewById(R.id.fulls)
         fullScreenLayoutKey = findViewById(R.id.layFullKey)
         spodok = findViewById(R.id.spodok)
+        vrch = findViewById(R.id.vrch)
+        tr = findViewById(R.id.TerminalLayout)
     }
 
     fun wordHelpButttonClicked(button: Button?){
-        var lstWords = txt!!.text.toString().trim().split(" ", "&nbsp;", "(",",","\\t")
+        val cursorIndex = txt!!.selectionStart
+        val prvaCast = txt!!.text.toString().substring(0, cursorIndex)
+        val druhaCast = txt!!.text.toString().substring(cursorIndex)
+        var lstWords = prvaCast.trim().split(" ", "&nbsp;", "(",",","\\t")
         var pppp = lstWords[lstWords.lastIndex].split("&nbsp;")
         var pppr = pppp[pppp.lastIndex].split(160.toChar())
         var sLastWordpom = pppr[pppr.size-1].split("\n")
         var sLastWordpom2 = sLastWordpom[sLastWordpom.size-1].split(".")
         var sLastWord = sLastWordpom2[sLastWordpom2.size-1].replace("[","").replace("]","").replace("=","").replace(">","").replace("<","")
-        txt!!.setText(txt!!.text.toString().trim() + (button!!.text).removePrefix(sLastWord))
+        txt!!.setText(prvaCast.trim() + (button!!.text).removePrefix(sLastWord) +druhaCast)
         txt!!.setSelection(txt!!.length())
         parseColor()
         setWords()
-        keyboardMain!!.setCursor()
+        //keyboardMain!!.setCursor()
+        var a = (cursorIndex+(button!!.text).removePrefix(sLastWord).length).toInt()
+        if(a > txt!!.text.toString().length)
+            a = txt!!.text.toString().length
+        txt!!.setSelection(a)
     }
 
 }
