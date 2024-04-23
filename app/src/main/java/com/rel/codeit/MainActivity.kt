@@ -295,8 +295,8 @@ class MainActivity : AppCompatActivity() {
         }
         print!!.setOnClickListener{
 
-            //klav2()
-            //term = true
+            klav2()
+            term = true
         }
 
         fun isAClick(startX: Float, startY: Float, endX: Float, endY: Float): Boolean {
@@ -878,21 +878,21 @@ class MainActivity : AppCompatActivity() {
         val cursorIndex = txt!!.selectionStart
         val prvaCast = txt!!.text.toString().substring(0, cursorIndex)
         val druhaCast = txt!!.text.toString().substring(cursorIndex)
-        var lstWords = prvaCast.trim().split(" ", "&nbsp;", "(",",","\\t")
+        var lstWords = prvaCast.split(" ", "&nbsp;", "(",",","\\t")
         var pppp = lstWords[lstWords.lastIndex].split("&nbsp;")
         var pppr = pppp[pppp.lastIndex].split(160.toChar())
         var sLastWordpom = pppr[pppr.size-1].split("\n")
         var sLastWordpom2 = sLastWordpom[sLastWordpom.size-1].split(".")
         var sLastWord = sLastWordpom2[sLastWordpom2.size-1].replace("[","").replace("]","").replace("=","").replace(">","").replace("<","")
-        txt!!.setText(prvaCast.trim() + (button!!.text).removePrefix(sLastWord) +druhaCast)
+        txt!!.setText(prvaCast + (button!!.text).removePrefix(sLastWord) +druhaCast)
         txt!!.setSelection(txt!!.length())
         parseColor()
-        setWords()
         //keyboardMain!!.setCursor()
         var a = (cursorIndex+(button!!.text).removePrefix(sLastWord).length).toInt()
         if(a > txt!!.text.toString().length)
             a = txt!!.text.toString().length
         txt!!.setSelection(a)
+        setWords()
     }
 
 }

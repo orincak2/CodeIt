@@ -197,8 +197,29 @@ class Parser(npg: Playground, nprint: EditText, texH: TextHelper):Syntax() {
 
         return 99999999.toFloat()
     }
-    fun vypisFloaty(cislo: Any):Any {
-        if(cislo is Int || cislo is Float){
+    fun vypisFloaty(cisloo: Any):Any {
+        var cislo = cisloo
+        if(cislo is String){
+            val floatNumber: Float? = cislo.toFloatOrNull()
+            if(floatNumber != null){
+                cislo = floatNumber
+            }
+        }
+        if(cislo is String){
+            var slova = cislo.split(' ')
+            var strr = ""
+            if(slova.count() > 1) {
+                for (sl in slova) {
+                    var pom = vypisFloaty(sl)
+                    strr += pom.toString() + " "
+                }
+            }else{
+                if(slova.count() > 0)
+                    strr += slova[0]
+            }
+            return  strr
+        }
+        if(cislo is Float){
         if (cislo == (cislo as Float).toInt().toFloat()) {
             return (cislo as Float).toInt()
         } else {
@@ -424,7 +445,7 @@ class Parser(npg: Playground, nprint: EditText, texH: TextHelper):Syntax() {
             if(tt.length>0){
                 novyriadok = "\n"
             }
-            print.setText(print.text.toString()+ ">" + tt + novyriadok)
+            print.setText(print.text.toString()+ ">" + tt + "\n")
             top = top + 1
         }else if (fromAnyToFloat(mem[pc]) == INSTRUCTION_PUSH.toFloat()){
             pc += 1
@@ -548,7 +569,7 @@ class Parser(npg: Playground, nprint: EditText, texH: TextHelper):Syntax() {
         }
 
         while (kind == WORD && tabindex <= tabcount ){
-            if(token == "ak" || token == "if") {
+            if(token == "ak" || token == "if" || token == "elif") {
                 var navysetab = tabcount - tabindex
                 scan()
                 var test = Syntax()
@@ -797,6 +818,7 @@ class Parser(npg: Playground, nprint: EditText, texH: TextHelper):Syntax() {
                 while (token == ","){
                     scan()
                     var pom = expr()
+                    x = Add(x,Strings(" "))
                     x = Add(x,pom)
                 }
                 result.add(Print(x))
@@ -1129,7 +1151,7 @@ class Parser(npg: Playground, nprint: EditText, texH: TextHelper):Syntax() {
                             }
                             result.add(Call(subr, agrs))
                         }
-                    }else if(name == "len"){
+                    }else if(name == "len" || name == "str" || name == "int"){
                         if (token == "(") {
                             scan()
                             var agrs = expr()
@@ -1358,6 +1380,18 @@ fun elementsO():MyList{
 
     fun operand():Syntax{
         var result = Syntax()
+        if(token == "str" || token == "int") {
+            scan()
+            if (token == "(") {
+                scan()
+            }
+            result = expr()
+            if (token == ")") {
+                scan()
+            }
+            return result
+        }
+
         if(kind == WORD){
             if(token == "false" || token == "False"){
                 result = Const(0.toFloat())

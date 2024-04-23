@@ -36,7 +36,10 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
     }
 
     fun setWords(){
-        var lstWords = eText!!.text.toString().trim().split(" ", "&nbsp;", "(",",","\\t")
+        val cursorIndex = eText!!.selectionStart
+        val prvaCast = eText!!.text.toString().substring(0, cursorIndex)
+        val druhaCast = eText!!.text.toString().substring(cursorIndex)
+        var lstWords = prvaCast.split(" ", "&nbsp;", "(",",","\\t")
         var pppp = lstWords[lstWords.lastIndex].split("&nbsp;")
         var pppr = pppp[pppp.lastIndex].split(160.toChar())
         var sLastWordpom = pppr[pppr.size-1].split("\n")
