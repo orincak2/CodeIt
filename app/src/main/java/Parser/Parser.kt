@@ -29,6 +29,7 @@ class Parser(npg: Playground, nprint: EditText, texH: TextHelper):Syntax() {
     var turtle = Turtle(pg!!)
     var tabindex = 0
     var tabcount = 0
+    var bElif = false
     var bolEnter = false
     var txH = texH
     var bInput = false
@@ -568,7 +569,11 @@ class Parser(npg: Playground, nprint: EditText, texH: TextHelper):Syntax() {
             globalvaradr += 1
         }
 
-        while (kind == WORD && tabindex <= tabcount ){
+        while (kind == WORD && (tabindex <= tabcount || bElif)){
+            if(bElif){
+                bElif = false
+                tabindex--
+            }
             if(token == "ak" || token == "if" || token == "elif") {
                 var navysetab = tabcount - tabindex
                 scan()
@@ -596,23 +601,28 @@ class Parser(npg: Playground, nprint: EditText, texH: TextHelper):Syntax() {
                     scan()
                 }
 
-                if (token == "inak" || token == "else") {
-                    if (boltab) {
-                        if (tabindex - 1 != tabcount) {
-                            throw Exception("Zle odsadenie" + "?" + index)
+                if (token == "inak" || token == "else" || token == "elif") {
+                    if(token != "elif") {
+                        if (boltab) {
+                            if (tabindex - 1 != tabcount) {
+                                throw Exception("Zle odsadenie" + "?" + index)
+                            }
                         }
-                    }
-                    scan()
-                    check(arrayOf(SYMBOL), arrayOf("{", ":"))
+                        scan()
+                        check(arrayOf(SYMBOL), arrayOf("{", ":"))
 
 
-                if (token == "{" || token == ":") {
-                    if (token == ":" && !boltab) {
-                        navysetab = tabcount - tabindex
-                        tabindex += 1 + navysetab
-                        boltab = true
+                        if (token == "{" || token == ":") {
+                            if (token == ":" && !boltab) {
+                                navysetab = tabcount - tabindex
+                                tabindex += 1 + navysetab
+                                boltab = true
+                            }
+                            scan()
+                        }
+                    }else{
+                        bElif = true
                     }
-                    scan()
                     ifelse.bodyfalse = parse(1)
 
                     if (!boltab)
@@ -621,7 +631,7 @@ class Parser(npg: Playground, nprint: EditText, texH: TextHelper):Syntax() {
                     if (token == "}") {
                         scan()
                     }
-                }
+
             }
                 if(boltab){
                     tabindex -= (1 + navysetab)

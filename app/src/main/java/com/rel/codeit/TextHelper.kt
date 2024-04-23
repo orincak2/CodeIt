@@ -98,7 +98,7 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
             }else if(ind != 0 && ind <= index && !chyba){
                 pom += getColoredTextWithBackground(token, Color.rgb(0,0,0).toString(),Color.rgb(255,0,0).toString())
                 chyba = true
-            } else if(token == "for" || token == "cyklus" || token == "foreach" || token == "opakuj" || token == "repeat" || token == "kym" || token == "while" || token == "ak" || token == "if" || token == "inak" || token == "else"){
+            } else if(token == "for" || token == "cyklus" || token == "foreach" || token == "opakuj" || token == "repeat" || token == "kym" || token == "while" || token == "ak" || token == "if" || token == "inak" || token == "else" || token == "elif"){
                 pom += getColoredText(token, Color.rgb(255, 102, 255).toString())
             }else if(token == "vrat" || token == "return" || token == "in" || token == "range"){
                 pom += getColoredText(token, Color.rgb(255, 165, 0).toString())
