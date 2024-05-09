@@ -89,7 +89,12 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
         var pom = ""
         next()
         pom = scan(pom,jeMedzernik)
+        var a = 0
         while (kind != NOTHING){
+            a++
+            if(a > 100000){
+                throw Exception("Zacyklenie v programe?")
+            }
             if(token == "definuj" || token == "def" || token == "fun" || token == "metoda"|| token == "funkcia"){
                 pom += getColoredText(token, Color.rgb(255, 165, 0).toString())
                 pom = scan(pom,jeMedzernik, true)
@@ -112,7 +117,7 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
                 pom += getColoredText(token, Color.CYAN.toString())
             }else if((wordHelper.any { it.equals(token) })){
                 val index = wordHelper.indexOfFirst { it.equals(token) }
-                if(wordHelper[index].isSUb || token == "kruh" || token == "stvorec" || token == "trojuholnik" || token == "turtle" || token == "korytnacka" || token == "dopredu" || token == "forward" || token == "left" || token == "vlavo" || token == "vpravo" || token == "right") {
+                if(wordHelper[index].isSUb || token == "kruh" || token == "stvorec" || token == "trojuholnik" || token == "turtle" || token == "korytnacka" || token == "dopredu" || token == "forward" || token == "left" || token == "vlavo" || token == "vpravo" || token == "right" || token == "rectangle" || token == "oval") {
                     pom += getColoredText(token, Color.rgb(102,0,204).toString())
                 }else{
                     if(kind == SYMBOL){
@@ -130,6 +135,8 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
                     pom += getColoredText(token, Color.BLACK.toString()) + getColoredText("&#8206;x,y,velkost,farba)&#8206;", Color.argb(100,210,210,210).toString())
                 }else if(token == "(" && (tokenPred=="turtle" || tokenPred=="korytnacka") && look == 0.toChar()){
                     pom += getColoredText(token, Color.BLACK.toString()) + getColoredText("&#8206;x,y,farba)&#8206;", Color.argb(100,210,210,210).toString())
+                }else if(token == "(" && (tokenPred=="oval" || tokenPred=="rectangle") && look == 0.toChar()){
+                    pom += getColoredText(token, Color.BLACK.toString()) + getColoredText("&#8206;x1,y1,x2,y2,color)&#8206;", Color.argb(100,210,210,210).toString())
                 }
                 else if(token == "(" && (subHelper[tokenPred] != null) && look == 0.toChar()){
                     pom += getColoredText(token, Color.BLACK.toString()) + getColoredText("&#8206;"+ subHelper[tokenPred]+"&#8206;", Color.argb(100,210,210,210).toString())
@@ -170,7 +177,12 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
 
     fun scan(nResult: String,jeMedzernik:Boolean = false, sub:Boolean = false): String{
         var result = nResult
+        var a = 0
         while(look == ' ' || look == '\n' || look == '\t' || look == ';' || look == 160.toChar()){
+            a++
+            if(a > 100000){
+                throw Exception("Zacyklenie v programe?")
+            }
             if(look == ' ' || look == 160.toChar()){
                 result += "&nbsp;"
             }else if (look == '\n' ){
@@ -187,21 +199,34 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
         if(look == 8206.toChar()){
             next()
             var a = 0
-            while (look != 8206.toChar() && look != ')' && a < 1000){
-                next()
+            while (look != 8206.toChar() && look != ')' && a < 100000){
                 a++
+                if(a > 100000){
+                  //  throw Exception("Zacyklenie v programe?")
+                }
+                next()
             }
             if(look != ')')
                 next()
         }
         if(look.isDigit()){
+            var a = 0
             while(look.isDigit()){
+                a++
+                if(a > 100000){
+                    throw Exception("Zacyklenie v programe?")
+                }
                 token += look
                 next()
             }
             kind = NUMBER
         }else if(look.isLetter()){
+            var a = 0
             while(look.isLetter() || look.isDigit()){
+                a++
+                if(a > 100000){
+                    throw Exception("Zacyklenie v programe?")
+                }
                 token += look
                 next()
             }
@@ -223,7 +248,12 @@ class TextHelper(text : EditText?, but1 : Button?, but2 : Button?, but3 : Button
         }else if(look == '\"'){
             token += look
             next()
+            var a = 0
             while(look != '\"' && look != 0.toChar() && look != '\n'){
+                a++
+                if(a > 100000){
+                    throw Exception("Zacyklenie v programe?")
+                }
                 token += look
                 next()
             }

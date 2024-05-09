@@ -18,7 +18,7 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
 
     var keyValues = SparseArray<String>()
     var inputConection : InputConnection?= null
-    var ac : MainActivity?= null
+    var ac : IDEActivity?= null
     var tabs = 0
 
     var button1 : Button? = null
@@ -85,13 +85,6 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
     init {
         LayoutInflater.from(context).inflate(R.layout.keyboard, this, true)
     }
-    fun setCursor(){
-        val sData: CharSequence = inputConection!!.getExtractedText(ExtractedTextRequest(), 0).text
-        inputConection!!.commitText("",sData.count()+1)
-    }
-
-
-
     override fun onClick(v: View?) {
         if(inputConection == null){
             return
@@ -99,8 +92,6 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
         if(v!!.getId() == R.id.button_maz) {
             var st = inputConection!!.getSelectedText(0)
             if (TextUtils.isEmpty(st)) {
-                val s = inputConection!!.getTextBeforeCursor(1000000, 0)
-                val ss = inputConection!!.getTextBeforeCursor(1, 0)
                 inputConection!!.deleteSurroundingText(1, 0)
             } else {
                 inputConection!!.commitText("", 1)
@@ -110,21 +101,15 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
             ac!!.parseColor()
             inputConection!!.commitText("", selectionStart+1)
             ac!!.setWords()
-        }else if (v!!.getId() == R.id.button_med){
+        }
+        else if (v!!.getId() == R.id.button_med){
             var value = keyValues.get(v!!.getId())
             inputConection!!.commitText(value, 1)
-
-            //val sData: CharSequence = inputConection!!.getExtractedText(ExtractedTextRequest(), 0).text
-           // inputConection!!.commitText("",sData.count() +1)//ac!!.txt2!!.text.count()+1)*/
             val et: ExtractedText = inputConection!!.getExtractedText(ExtractedTextRequest(), 0)
             val selectionStart = et.selectionStart
-           // val sData: CharSequence? = inputConection!!.getTextBeforeCursor(0, 0)
             ac!!.parseColor(0, true)
             inputConection!!.commitText("", selectionStart+1)
-
             ac!!.setWords()
-
-
         }
         else if (v!!.getId() == R.id.button_ent){
             val s = inputConection!!.getTextBeforeCursor(1000000, 0)!!.split('\n')
@@ -150,11 +135,11 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
             val et: ExtractedText = inputConection!!.getExtractedText(ExtractedTextRequest(), 0)
             val selectionStart = et.selectionStart
             ac!!.parseColor()
-            inputConection!!.commitText("", selectionStart+2)
+            inputConection!!.commitText("", selectionStart+1)
             ac!!.setWords()
             ac!!.addline()
             if(ac!!.bInput!!){
-                ac!!.opakujsInputom()
+                ac!!.RepeatWithInputom()
             }
             else if(ac!!.term){
                 ac!!.cezterminal()
@@ -166,7 +151,8 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
             }else {
                 ac!!.zavriklavesnicu()
             }
-        }else{
+        }
+        else{
             if((v!!.getId() == R.id.button_shift)){
                 tabs++
             }
@@ -180,9 +166,7 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
                 ac!!.parseColor()
             inputConection!!.commitText("", selectionStart+1)
             ac!!.setWords()
-
         }
-
     }
 
     override fun onFinishInflate() {
@@ -367,7 +351,7 @@ class MyKeyboard(internal var context: Context, attrs: AttributeSet): LinearLayo
         keyValues.put(R.id.button_ciarka, ",")
     }
 
-     fun setsInputConection(ic: InputConnection, nac: MainActivity){
+     fun setsInputConection(ic: InputConnection, nac: IDEActivity){
         inputConection = ic
          ac = nac
     }

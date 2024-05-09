@@ -3,18 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:background="@drawable/bggg">
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/backgroundMain"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/bgggr" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/AplicationNameMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:fontFamily="@font/chango"
         android:gravity="center|left"
-        android:text=" Code it!"
-        android:textColor="#1ECCEC"
+        android:text="Code it!"
+        android:textColor="#77DEF1"
         android:textSize="116sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,35 +32,111 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.204" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button22"
-        android:layout_width="190sp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_border"
+    <ImageView
+        android:id="@+id/butContinueMain"
+        android:layout_width="224dp"
+        android:layout_height="57dp"
         android:paddingLeft="20sp"
         android:paddingRight="20sp"
-        android:text="Nový súbor"
-        android:textAllCaps="false"
-        android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6"
-        app:layout_constraintVertical_bias="0.120000005" />
+        app:layout_constraintTop_toBottomOf="@+id/AplicationNameMain"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/continuee" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button7"
-        android:layout_width="190sp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_border"
+    <ImageView
+        android:id="@+id/butNewFileMain"
+        android:layout_width="218dp"
+        android:layout_height="55dp"
         android:paddingLeft="20sp"
         android:paddingRight="20sp"
-        android:text="Otvoriť súbor"
-        android:textAllCaps="false"
-        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/butContinueMain"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/newfile" />
+
+    <ImageView
+        android:id="@+id/butOpenFileMain"
+        android:layout_width="238dp"
+        android:layout_height="61dp"
+        android:paddingLeft="20sp"
+        android:paddingRight="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/butNewFileMain"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/openfile" />
+
+    <LinearLayout
+        android:id="@+id/SavedFiles"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_border"
+        android:orientation="vertical"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button22"
-        app:layout_constraintVertical_bias="0.120000005" />
+        app:layout_constraintTop_toBottomOf="@+id/AplicationNameMain">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/SavedFileText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="Saved files"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="@+id/CloseSaved"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/CloseSaved"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|end"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="4dp">
+
+            <LinearLayout
+                android:id="@+id/scrollLayoutMain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/AplicationNameMain">
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
