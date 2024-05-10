@@ -9,6 +9,7 @@ class Compiler(nprint: EditText): Syntax() {
     var myVirtualMachine = VirtualMachine(nprint)
 
     fun run(txt:String):Boolean{
+
         var parssTree = myParser.run(txt)
 
         generateReset()

@@ -1,6 +1,7 @@
 package Compiler.Parser
 
 
+import Compiler.INSTRUCTION_JUMP
 import Compiler.NUMBER
 import Compiler.SYMBOL
 import Compiler.Parser.Turtle.Farba
@@ -16,9 +17,11 @@ import Compiler.Parser.Turtle.Trojuholnik
 import Drawing.Turtle
 import Compiler.Scaner
 import Compiler.WORD
+import Compiler.adr
 import Compiler.bElif
 import Compiler.bInput
 import Compiler.bolEnter
+import Compiler.counter_adr
 import Compiler.frame
 import Compiler.globals
 import Compiler.globalvaradr
@@ -47,6 +50,7 @@ fun Float.toBoolean() = if (this == 1.toFloat()) true else false
 class Parser():Syntax() {
     var myScanner = Scaner()
     fun run(txt:String):Syntax{
+            parserReset(myScanner)
             input = txt.toString().trim()
             parserReset(myScanner)
 
@@ -67,13 +71,13 @@ class Parser():Syntax() {
                 bElif = false
                 //tabindex--
             }
-            if(token == "ak" || token == "if" || token == "elif") {
+            if(token == "ak" || token == "if" || token == "elif" || token == "inakak") {
                 parseIf(result)
             }
-            else if(token == "definuj" || token == "def" || token == "fun" || token == "metoda"|| token == "funkcia"){
+            else if(token == "definuj" || token == "def" || token == "fun" || token == "method"){
                 parseDef(result)
             }
-            else if (token == "for" || token == "cyklus" || token == "forEach") {
+            else if (token == "for" || token == "cyklus" || token == "foreach" || token == "pre" || token == "prekazde") {
                 parseFor(result)
             }
             else if(token == "opakuj" || token == "repeat"){
@@ -88,31 +92,31 @@ class Parser():Syntax() {
             else if(token == "kym" || token == "while"){
                 parseWhile(result)
             }
-            else if (token == "dopredu" || token == "forward" || token == "vpred") {
+            else if (token == "dopredu" || token == "forward" || token == "fd") {
                 parseFd(result)
             }
-            else if (token == "vpravo" || token == "right") {
+            else if (token == "vpravo" || token == "right" || token == "rt") {
                 parseRt(result)
             }
-            else if (token == "vlavo" || token == "left") {
+            else if (token == "vlavo" || token == "left" || token == "lt") {
                 parseLt(result)
             }
             else if (token == "stvorec" || token == "square") {
                 parseSquare(result)
             }
-            else if (token == "rectangle" || token == "create_rectangle") {
+            else if (token == "rectangle" || token == "createrectangle" || token == "obdlznik") {
                 parseRectangle(result)
             }
-            else if (token == "oval" || token == "create_oval") {
+            else if (token == "oval" || token == "createoval") {
                 parseOval(result)
             }
-            else if (token == "kruh") {
+            else if (token == "kruh" || token == "circle") {
                 parseCircle(result)
             }
-            else if (token == "trojuholnik") {
+            else if (token == "trojuholnik" || token == "triangle") {
                 parseTriangle(result)
             }
-            else if (token == "farba" || token == "color" || token == "setColor" || token == "nastavFarbu") {
+            else if (token == "farba" || token == "color" || token == "setcolor" || token == "nastavfarbu") {
                 parseColor(result)
             }
             else if (token == "position" || token == "pozicia" || token == "poloha" || token == "setPosition") {
@@ -1352,7 +1356,13 @@ class Parser():Syntax() {
         top = mem.size-1
         frame = top
         terminated = false
-
+        counter_adr = 500
+        mem = MutableList(1000) { Any() }
+        //mem.addAll(List(1000) { Any() })
+        adr = 0
+        poke(INSTRUCTION_JUMP)
+        poke(globalvaradr)
+        adr = globalvaradr
         tabindex = 0
         tabcount = 0
         index = 0

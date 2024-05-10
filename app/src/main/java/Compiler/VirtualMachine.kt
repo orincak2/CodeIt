@@ -15,192 +15,6 @@ class VirtualMachine (nprint: EditText){
     )
     var print = nprint
 
-    class MojaTrieda(val hodnota: Any) {
-        operator fun plus(inyObjekt: MojaTrieda): Any {
-            if(this.hodnota is Float){
-                if(inyObjekt.hodnota is Float){
-                    return (this.hodnota as Float).toFloat() + (inyObjekt.hodnota as Float).toFloat()
-                }
-                if(inyObjekt.hodnota is Int){
-                    return (this.hodnota as Float).toFloat() + (inyObjekt.hodnota as Int).toInt()
-                }
-                if(inyObjekt.hodnota is String){
-                    return (this.hodnota as Float).toString() + (inyObjekt.hodnota as String)
-                }
-            }
-            if(this.hodnota is Int){
-                if(inyObjekt.hodnota is Float){
-                    return (this.hodnota as Int).toInt() + (inyObjekt.hodnota as Float).toFloat()
-                }
-                if(inyObjekt.hodnota is Int){
-                    return (this.hodnota as Int).toInt() + (inyObjekt.hodnota as Int).toInt()
-                }
-                if(inyObjekt.hodnota is String){
-                    return (this.hodnota as Int).toString() + (inyObjekt.hodnota as String)
-                }
-            }
-            if(this.hodnota is String){
-                if(inyObjekt.hodnota is Float){
-                    return (this.hodnota as String) + (inyObjekt.hodnota as Float).toString()
-                }
-                if(inyObjekt.hodnota is  Int){
-                    return (this.hodnota as String) + (inyObjekt.hodnota as Int).toString()
-                }
-                if(inyObjekt.hodnota is String){
-                    return (this.hodnota as String) + (inyObjekt.hodnota as String)
-                }
-            }
-            return 99999998
-        }
-
-        operator fun times(inyObjekt: MojaTrieda): Any {
-            if(this.hodnota is Float){
-                if(inyObjekt.hodnota is Float){
-                    return (this.hodnota as Float).toFloat() * (inyObjekt.hodnota as Float).toFloat()
-                }
-                if(inyObjekt.hodnota is Int){
-                    return (this.hodnota as Float).toFloat() * (inyObjekt.hodnota as Int).toInt()
-                }
-                if(inyObjekt.hodnota is String){
-                    val opakujuciSaRetazec = (inyObjekt.hodnota as String).toString().repeat((this.hodnota as Float).toInt())
-                    return opakujuciSaRetazec
-                }
-            }
-
-            if(this.hodnota is Int){
-                if(inyObjekt.hodnota is Float){
-                    return (this.hodnota as Int).toInt() * (inyObjekt.hodnota as Float).toFloat()
-                }
-                if(inyObjekt.hodnota is Int){
-                    return (this.hodnota as Int).toInt() * (inyObjekt.hodnota as Int).toInt()
-                }
-                if(inyObjekt.hodnota is String){
-                    val opakujuciSaRetazec = (inyObjekt.hodnota as String).toString().repeat((this.hodnota as Int).toInt())
-                    return opakujuciSaRetazec
-                }
-            }
-            if(this.hodnota is String){
-                if(inyObjekt.hodnota is Float){
-                    val opakujuciSaRetazec = (this.hodnota as String).toString().repeat((inyObjekt.hodnota as Float).toInt())
-                    return opakujuciSaRetazec
-                }
-                if(inyObjekt.hodnota is Int){
-                    val opakujuciSaRetazec = (this.hodnota as String).toString().repeat((inyObjekt.hodnota as Int).toInt())
-                    return opakujuciSaRetazec
-                }
-
-            }
-            return 99999998
-        }
-
-        fun equals(inyObjekt: MojaTrieda): Boolean {
-            if(this.hodnota is Float){
-                if(inyObjekt.hodnota is Float){
-                    return (this.hodnota as Float).toFloat() != (inyObjekt.hodnota as Float).toFloat()
-                }
-            }
-            if(this.hodnota is MutableList<*>){
-                if(inyObjekt.hodnota is MutableList<*>){
-                    return (this.hodnota as MutableList<*>) != (inyObjekt.hodnota as MutableList<*>)
-                }
-            }
-            if(this.hodnota is Array<*>){
-                if(inyObjekt.hodnota is Array<*>){
-                    return (this.hodnota as Array<*>) != (inyObjekt.hodnota as Array<*>)
-                }
-            }
-            if(this.hodnota is Int){
-                if(inyObjekt.hodnota is Int){
-                    return (this.hodnota as Int).toInt() != (inyObjekt.hodnota as Int).toInt()
-                }
-            }
-            if(this.hodnota is String){
-                if(inyObjekt.hodnota is String){
-                    return (this.hodnota as String).toString() != (inyObjekt.hodnota as String).toString()
-                }
-
-            }
-            return false
-        }
-    }
-
-    fun fromAnyToFloat(anyFloatValue: Any):Float{
-        if(anyFloatValue is Float){
-            return anyFloatValue.toFloat()
-        }
-        if(anyFloatValue is Boolean){
-            return anyFloatValue.toFloat()
-        }
-
-
-        return 99999999.toFloat()
-    }
-
-    fun vypisFloaty(cisloo: Any):Any {
-        var cislo = cisloo
-        if(cislo is String) {
-            if (cislo.contains(".")){
-                val floatNumber: Float? = cislo.toFloatOrNull()
-                if (floatNumber != null) {
-                    cislo = floatNumber
-                }
-            }else{
-                val floatNumber: Long? = cislo.toLongOrNull()
-                if (floatNumber != null) {
-                    cislo = floatNumber
-                }
-            }
-        }
-        if(cislo is String){
-            var slova = cislo.split(' ')
-            var strr = ""
-            if(slova.count() > 1) {
-                for (sl in slova) {
-                    var pom = vypisFloaty(sl)
-                    strr += pom.toString() + " "
-                }
-            }else{
-                if(slova.count() > 0)
-                    strr += slova[0]
-            }
-            return  strr
-        }
-        if(cislo is Float){
-            if (cislo == (cislo as Float).toInt().toFloat()) {
-                return (cislo as Float).toLong()
-            } else {
-                return cislo
-            }}
-        return cislo
-    }
-
-    fun len(obj: Any): Float {
-        return when (obj) {
-            is String -> obj.length.toFloat()
-            is Array<*> -> obj.size.toFloat()
-            is Collection<*> -> obj.size.toFloat()
-            else -> throw IllegalArgumentException("Unsupported type")
-        }
-    }
-
-    fun fromAnyTo(anyFloatValue: Any):Any{
-        if(anyFloatValue is String){
-            return anyFloatValue.toString()
-        }
-        if(anyFloatValue is Char){
-            return anyFloatValue.toString()
-        }
-        if(anyFloatValue is Float){
-            return anyFloatValue.toFloat()
-        }
-        if(anyFloatValue is Number){
-            return anyFloatValue.toInt()
-        }
-
-        return 99999999.toFloat()
-    }
-
-
     fun run():Boolean{
         var controll = 0
         while(terminated != true){
@@ -526,5 +340,190 @@ class VirtualMachine (nprint: EditText){
         else {
             terminated = true
         }
+    }
+
+    class MojaTrieda(val hodnota: Any) {
+        operator fun plus(inyObjekt: MojaTrieda): Any {
+            if(this.hodnota is Float){
+                if(inyObjekt.hodnota is Float){
+                    return (this.hodnota as Float).toFloat() + (inyObjekt.hodnota as Float).toFloat()
+                }
+                if(inyObjekt.hodnota is Int){
+                    return (this.hodnota as Float).toFloat() + (inyObjekt.hodnota as Int).toInt()
+                }
+                if(inyObjekt.hodnota is String){
+                    return (this.hodnota as Float).toString() + (inyObjekt.hodnota as String)
+                }
+            }
+            if(this.hodnota is Int){
+                if(inyObjekt.hodnota is Float){
+                    return (this.hodnota as Int).toInt() + (inyObjekt.hodnota as Float).toFloat()
+                }
+                if(inyObjekt.hodnota is Int){
+                    return (this.hodnota as Int).toInt() + (inyObjekt.hodnota as Int).toInt()
+                }
+                if(inyObjekt.hodnota is String){
+                    return (this.hodnota as Int).toString() + (inyObjekt.hodnota as String)
+                }
+            }
+            if(this.hodnota is String){
+                if(inyObjekt.hodnota is Float){
+                    return (this.hodnota as String) + (inyObjekt.hodnota as Float).toString()
+                }
+                if(inyObjekt.hodnota is  Int){
+                    return (this.hodnota as String) + (inyObjekt.hodnota as Int).toString()
+                }
+                if(inyObjekt.hodnota is String){
+                    return (this.hodnota as String) + (inyObjekt.hodnota as String)
+                }
+            }
+            return 99999998
+        }
+
+        operator fun times(inyObjekt: MojaTrieda): Any {
+            if(this.hodnota is Float){
+                if(inyObjekt.hodnota is Float){
+                    return (this.hodnota as Float).toFloat() * (inyObjekt.hodnota as Float).toFloat()
+                }
+                if(inyObjekt.hodnota is Int){
+                    return (this.hodnota as Float).toFloat() * (inyObjekt.hodnota as Int).toInt()
+                }
+                if(inyObjekt.hodnota is String){
+                    val opakujuciSaRetazec = (inyObjekt.hodnota as String).toString().repeat((this.hodnota as Float).toInt())
+                    return opakujuciSaRetazec
+                }
+            }
+
+            if(this.hodnota is Int){
+                if(inyObjekt.hodnota is Float){
+                    return (this.hodnota as Int).toInt() * (inyObjekt.hodnota as Float).toFloat()
+                }
+                if(inyObjekt.hodnota is Int){
+                    return (this.hodnota as Int).toInt() * (inyObjekt.hodnota as Int).toInt()
+                }
+                if(inyObjekt.hodnota is String){
+                    val opakujuciSaRetazec = (inyObjekt.hodnota as String).toString().repeat((this.hodnota as Int).toInt())
+                    return opakujuciSaRetazec
+                }
+            }
+            if(this.hodnota is String){
+                if(inyObjekt.hodnota is Float){
+                    val opakujuciSaRetazec = (this.hodnota as String).toString().repeat((inyObjekt.hodnota as Float).toInt())
+                    return opakujuciSaRetazec
+                }
+                if(inyObjekt.hodnota is Int){
+                    val opakujuciSaRetazec = (this.hodnota as String).toString().repeat((inyObjekt.hodnota as Int).toInt())
+                    return opakujuciSaRetazec
+                }
+
+            }
+            return 99999998
+        }
+
+        fun equals(inyObjekt: MojaTrieda): Boolean {
+            if(this.hodnota is Float){
+                if(inyObjekt.hodnota is Float){
+                    return (this.hodnota as Float).toFloat() != (inyObjekt.hodnota as Float).toFloat()
+                }
+            }
+            if(this.hodnota is MutableList<*>){
+                if(inyObjekt.hodnota is MutableList<*>){
+                    return (this.hodnota as MutableList<*>) != (inyObjekt.hodnota as MutableList<*>)
+                }
+            }
+            if(this.hodnota is Array<*>){
+                if(inyObjekt.hodnota is Array<*>){
+                    return (this.hodnota as Array<*>) != (inyObjekt.hodnota as Array<*>)
+                }
+            }
+            if(this.hodnota is Int){
+                if(inyObjekt.hodnota is Int){
+                    return (this.hodnota as Int).toInt() != (inyObjekt.hodnota as Int).toInt()
+                }
+            }
+            if(this.hodnota is String){
+                if(inyObjekt.hodnota is String){
+                    return (this.hodnota as String).toString() != (inyObjekt.hodnota as String).toString()
+                }
+
+            }
+            return false
+        }
+    }
+
+    fun fromAnyToFloat(anyFloatValue: Any):Float{
+        if(anyFloatValue is Float){
+            return anyFloatValue.toFloat()
+        }
+        if(anyFloatValue is Boolean){
+            return anyFloatValue.toFloat()
+        }
+
+
+        return 99999999.toFloat()
+    }
+
+    fun vypisFloaty(cisloo: Any):Any {
+        var cislo = cisloo
+        if(cislo is String) {
+            if (cislo.contains(".")){
+                val floatNumber: Float? = cislo.toFloatOrNull()
+                if (floatNumber != null) {
+                    cislo = floatNumber
+                }
+            }else{
+                val floatNumber: Long? = cislo.toLongOrNull()
+                if (floatNumber != null) {
+                    cislo = floatNumber
+                }
+            }
+        }
+        if(cislo is String){
+            var slova = cislo.split(' ')
+            var strr = ""
+            if(slova.count() > 1) {
+                for (sl in slova) {
+                    var pom = vypisFloaty(sl)
+                    strr += pom.toString() + " "
+                }
+            }else{
+                if(slova.count() > 0)
+                    strr += slova[0]
+            }
+            return  strr
+        }
+        if(cislo is Float){
+            if (cislo == (cislo as Float).toInt().toFloat()) {
+                return (cislo as Float).toLong()
+            } else {
+                return cislo
+            }}
+        return cislo
+    }
+
+    fun len(obj: Any): Float {
+        return when (obj) {
+            is String -> obj.length.toFloat()
+            is Array<*> -> obj.size.toFloat()
+            is Collection<*> -> obj.size.toFloat()
+            else -> throw IllegalArgumentException("Unsupported type")
+        }
+    }
+
+    fun fromAnyTo(anyFloatValue: Any):Any{
+        if(anyFloatValue is String){
+            return anyFloatValue.toString()
+        }
+        if(anyFloatValue is Char){
+            return anyFloatValue.toString()
+        }
+        if(anyFloatValue is Float){
+            return anyFloatValue.toFloat()
+        }
+        if(anyFloatValue is Number){
+            return anyFloatValue.toInt()
+        }
+
+        return 99999999.toFloat()
     }
 }
